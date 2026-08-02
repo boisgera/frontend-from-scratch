@@ -39,9 +39,22 @@
     `js` files (with JSX translated to the React JS API).
     -> update the build script.
 
+    TODO: solve the shitty annotations that VS Code is giving me for what
+    is perfectly fine civet code. Configure ts settings I get (???
+    have a look at what the VS code civet plugin actually needs/uses)
+
+ 9. Markdown stuff. Meow ... I need a CLI compiler but it does not exist.
+    OK, I can wrap a single-file compiler using the JS API with Bun
+    (not Node afaict since I have no "node project" and I can't get 
+    the `@mdx-js/mdx` dep installed in a cache/tmp dir).
+    Then unfortunately I have to tweak the options a bit to get the
+    imports it uses in the generated file using ESM raw http:// paths.
+
 TODO: 
 
-  - replace jsx with civet.
-  - MDX stuff
+  - MDX stuff (MD that imports/uses a component I have defined locally
+    and/or an external, not vendored one?)
+  
   - StyleX stuff
-  - tree shaking with esbuild
+  
+  - tree shaking with esbuild (??? I fear the fragility)

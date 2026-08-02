@@ -4,9 +4,12 @@
 # since we may want to filter out the source files afterwards.
 rm -rf dist
 cp -rf src dist
+
 npx @danielx/civet -c dist/main.civet -o dist/main.tsx
 npx esbuild dist/main.tsx --outfile=dist/main.js
+
 npx @danielx/civet -c dist/app.civet -o dist/app.tsx
 npx esbuild dist/app.tsx --outfile=dist/app.js
 
-
+./mdx-compile.js dist/page.mdx dist/page.tsx
+npx esbuild dist/page.tsx --outfile=dist/page.js
