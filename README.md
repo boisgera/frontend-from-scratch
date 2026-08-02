@@ -55,6 +55,17 @@ TODO:
   - MDX stuff (MD that imports/uses a component I have defined locally
     and/or an external, not vendored one?)
   
-  - StyleX stuff
+  - CSS ? Nah, nothing special to do here.
+
+  - StyleX stuff. Mmm afraid that wil be an issue ; even if there is a 
+    CLI, it is one that install itself in an existing "project"
+    (node, bun, etc.), and afterwards the stuff it touches requires 
+    "css imports" to work (?). So I need a esbuild/resolveStuff layer for
+    this?
+
+    Again, I have to experiment. Bun may be able to solve part of the problem
+    for me here...
   
-  - tree shaking with esbuild (??? I fear the fragility)
+  - Framer/Motion
+
+  - MathJax stuff
