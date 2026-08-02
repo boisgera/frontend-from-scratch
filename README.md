@@ -23,9 +23,25 @@
    then convert it to js using `esbuild` (via `npx`). Note that I generate
    a `main.js` so my import of that in the HTML is already present
    (and the `main.js` is visible if I want to import it).
+   NOTE: at this step I have a `build`!
+
+ 7. Split the `main.jsx` into a main and an `app.jsx` file, 
+    put eveything inside a `src` folder, adjust the `build` 
+    and HTML file accordingly.
+
+ 8. Replace `app.jsx` and `main.js` with `civet` files, 
+    adjust the build accordingly. Use the occasion to keep `src` clean
+    and copy everything into `dist` dir. Add this into `.gitignore`
+    Note: the Civet compiler can turn ".civet" files into ".ts" or
+    even ".js" but any uninterpreted JSX syntax will remain.
+    So I am actually turning `.civet` files into `.tsx` file with
+    the Civet compiler and then using `esbuild` to generate the 
+    `js` files (with JSX translated to the React JS API).
+    -> update the build script.
 
 TODO: 
-  - split the main jsx file, organize the stuff a bit into a src folder. 
-  - vendor the react ESM libs?
+
   - replace jsx with civet.
   - MDX stuff
+  - StyleX stuff
+  - tree shaking with esbuild

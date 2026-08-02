@@ -1,0 +1,4 @@
+import { createRoot } from "https://esm.sh/react-dom/client"
+import { App } from "./app.js"
+
+document.body |> createRoot |> .render App()

@@ -1,0 +1,9 @@
+"civet autoLet react jsxCode"
+
+import React from "https://esm.sh/react"
+
+export App = =>
+  <h1>
+    "React App"
+  <p>
+    "Hello frontend! (from Civet+React)"
