@@ -1,8 +1,16 @@
 
 
-This guys is what a suitable $n = 1 + 1$ math expression looks like in MDX.
+This, guys, is what a suitable $n = 1 + 1$ math expression looks like in MDX.
 
 $$
-I = \int_0^1 \frac{dx}{\sqrt{x}}
+I = \int_0^1 \frac{dx}{\sqrt{x + 1}}
 $$
+
+The export is SVG only, which is fine AFAICT even if I'd like to test 
+"pure MathML" stuff too.
+
+At the very least, SVG means no extra runtime dependencies and no extra
+CSS code to import into the HTML.
+
+
 

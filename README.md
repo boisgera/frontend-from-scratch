@@ -89,19 +89,26 @@
 
     OK, fuck that, there are too many thing that assume that at least dev
     tool are installed in node_modules, I am going to `bun add -d` what I
-    need (`remark-math` and `rehype-mathjax`).
+    need (`remark-math` and `rehype-mathjax` ... aaah and `@mdx-js/mdx` too)
+
+   I am accepting that I need stuff installed for Bun (or Node, whatever),
+   BUT ONLY FOR BUILD TOOLS. I am *not* installing anything that will be
+   shipped for my HTML inside node_modules, still going for online ESM
+   stuff.
 
 
 TODO:
 
-  - Mathjax stuff
+  - Basic CSS stuff. 
+  
+  - CSS in JS somehow? (but global, non-mangled). Try JSS fist
+    (ref : https://cssinjs.org/)
 
   - Framer/Motion stuff
 
   - Tldraw React component
 
   - Marimo React component
-
 
   - StyleX stuff. Mmm afraid that wil be an issue ; even if there is a 
     CLI, it is one that install itself in an existing "project"
