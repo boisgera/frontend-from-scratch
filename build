@@ -11,5 +11,11 @@ npx esbuild dist/main.tsx --outfile=dist/main.js
 npx @danielx/civet -c dist/app.civet -o dist/app.tsx
 npx esbuild dist/app.tsx --outfile=dist/app.js
 
+npx @danielx/civet -c dist/warning.civet -o dist/warning.tsx
+npx esbuild dist/warning.tsx --outfile=dist/warning.js
+
 ./mdx-compile.js dist/page.mdx dist/page.tsx
 npx esbuild dist/page.tsx --outfile=dist/page.js
+
+./mdx-compile.js dist/math-text.mdx dist/math-text.tsx
+npx esbuild dist/math-text.tsx --outfile=dist/math-text.js

@@ -1,7 +1,9 @@
+// @ts-nocheck
 "civet autoLet react jsxCode"
 
 import React from "https://esm.sh/react"
 import Page from './page.js'
+import MathText from './math-text.js'
 
 export App = =>
   <h1>
@@ -9,3 +11,5 @@ export App = =>
   <p>
     "Hello frontend! (from Civet+React)"
   <Page>
+  <MathText>
+

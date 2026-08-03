@@ -1,3 +1,5 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
 import { createRoot } from "https://esm.sh/react-dom/client"
 import { App } from "./app.js"
 

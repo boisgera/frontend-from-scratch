@@ -1,0 +1,7 @@
+{
+  "mdx": {
+    "plugins": [
+      ["remark-math", []]
+    ]
+  }
+}
