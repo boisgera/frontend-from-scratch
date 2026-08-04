@@ -96,8 +96,14 @@
    shipped for my HTML inside node_modules, still going for online ESM
    stuff.
 
+12. Make a React `Button` component, styled with inline styles, 
+    use it somewhere. Arf, if I need fonts I am going to have to reach
+    for CSS?
+
 
 TODO:
+
+  - CSS reset
 
   - Basic CSS stuff. 
   

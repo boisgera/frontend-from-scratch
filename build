@@ -1,21 +1,31 @@
 #!/bin/bash
 
-# Actually, we may need a `build` dir (or rather `.build`) AND a `dist` dir
-# since we may want to filter out the source files afterwards.
-rm -rf dist
-cp -rf src dist
+build() {
+  local tsx
 
-npx @danielx/civet -c dist/main.civet -o dist/main.tsx
-npx esbuild dist/main.tsx --outfile=dist/main.js
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: build <name> [name...]" >&2
+    return 1
+  fi
 
-npx @danielx/civet -c dist/app.civet -o dist/app.tsx
-npx esbuild dist/app.tsx --outfile=dist/app.js
+  for name in "$@"; do
+    tsx="dist/${name}.tsx"
 
-npx @danielx/civet -c dist/warning.civet -o dist/warning.tsx
-npx esbuild dist/warning.tsx --outfile=dist/warning.js
+    if [[ -f "dist/${name}.civet" ]]; then
+      npx @danielx/civet -c "dist/${name}.civet" -o "$tsx" || return 1
+    elif [[ -f "dist/${name}.mdx" ]]; then
+      bun run scripts/mdx-compile.js "dist/${name}.mdx" "$tsx" || return 1
+    else
+      echo "Error: no dist/${name}.civet or dist/${name}.mdx found" >&2
+      return 1
+    fi
 
-bun run scripts/mdx-compile.js dist/page.mdx dist/page.tsx
-npx esbuild dist/page.tsx --outfile=dist/page.js
+    npx esbuild "$tsx" --outfile="dist/${name}.js"
+  done
+}
 
-bun run scripts/mdx-compile.js dist/math-text.mdx dist/math-text.tsx
-npx esbuild dist/math-text.tsx --outfile=dist/math-text.js
+if [[ $# -eq 0 ]]; then
+  build button warning math-text page app main
+else
+  build "$@"
+fi

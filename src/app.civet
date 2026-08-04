@@ -4,10 +4,24 @@
 import React from "https://esm.sh/react"
 import Page from './page.js'
 import MathText from './math-text.js'
+import { Button } from './button.js'
+
+ButtonDemo = =>
+  <div style =
+    backgroundColor: "whitesmoke"
+    width: 320
+    height: 200
+    display: "flex"
+    justifyContent: "center"
+    alignItems: "center"
+  >
+    <Button onClick= { () => alert("Hello Civet!") }>
+      "Click me!"
 
 export App = =>
   <h1>
     "React App"
+  <ButtonDemo>
   <p>
     "Hello frontend! (from Civet+React)"
   <Page>
