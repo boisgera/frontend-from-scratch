@@ -98,10 +98,12 @@
 
 12. Make a React `Button` component, styled with inline styles, 
     use it somewhere. Arf, if I need fonts I am going to have to reach
-    for CSS?
+    for CSS? Nah, hard-coded imports in the HTML head is good enough.
 
 
 TODO:
+
+  - TODO : build script in civet, using the esbuild JS API.
 
   - CSS reset
 
