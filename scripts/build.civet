@@ -1,71 +1,61 @@
-"civet autoLet"
 // @ts-nocheck
+"civet autoLet"
+
+// Node
+import assert from "node:assert"
 import { existsSync } from node:fs
 import { execFileSync } from node:child_process
-import { cp, mkdir, readdir, rm } from node:fs/promises
+import { cp, mkdir, readdir, readFile, rm, writeFile } from node:fs/promises
 import { extname } from node:path
 
+// Third-party
 import * as civet from @danielx/civet
 import * as esbuild from esbuild
 
+// Local
+import * as mdx from "./mdx.civet"
+
+
+/** "aaa.bbb.ccc" -> [ 'aaa.bbb', '.ccc' ] and "aaa" -> [ 'aaa', ''] */
 function splitExt(path)
   ext = extname path
-  console.log "ext:", ext
-  if ext == ""
-    console.log "*"
-    [path, ""]
-  else
-    console.log "**"
-    console.log "ext:", ext
-    console.log "ext.length", ext.length
-    console.log "path.length:", path.length
-    console.log path.length-ext.length-1
-    console.log path[..6]
-    [
-      path[..6], 
-      ext
-    ]
+  assert.equal (typeof ext), "string"
+  [
+    path[..(-ext.length - 1)], 
+    ext
+  ]
 
-console.log (splitExt "aaa.bbb.ccc") # => ["aaa.bbb", ".ccc"]
-console.log "---"
-// console.log (splitExt "aaa")     # => ["aaa", ""]
-
-await process.exit(0)
-
-function build(...names)
-  console.log "***"
-  if names.length == 0
+function build(...filenames)
+  if filenames.length == 0
     console.error "Usage: build <name> [name...]"
     process.exit 1
 
-  for name of names
-    if existsSync `${name}.civet`
-      `${name}.civet`
-        |> readFile &, utf8
-        |> await
-        |> civet.compile
-        |> await
-        |> writeFile `${name}.tsx`, &
-        |> await
-    else if existsSync `${name}.mdx`
-      await mdx.compile `${name}.mdx`
-    else
-      // 🚧 Warn for each non-compilable file instead (?)
-      console.error `Error: no ${name}.civet or ${name}.mdx found`
-      process.exit 1
-
+  for filename of filenames
+    [ name, ext ] = splitExt filename
+    if ext == ".civet"
+      source = await readFile `${name}.civet`, "utf8"
+      compiled = await civet.compile source
+      await writeFile `${name}.tsx`, compiled
+    else if ext == ".mdx"
+      await mdx.compile `${name}.mdx` // generate a `${name}.tsx` file
+    // Now we compile the tsx file (source or generated) to js
     await esbuild.build 
       entryPoints: [`${name}.tsx`] 
       outfile: `${name}.js`
 
-args = process.argv[2..]
-if args.length == 0
+function buildAll()
   await rm "dist", recursive: true, force: true
-  // await mkdir "dist"
   await cp "src", "dist", recursive: true
-  files = 
-    await readdir "dist", recursive: true
-    |> for file of & then `dist/${file}`
-  build ...files  
-else
-  build ...args
+  files = await readdir "dist", recursive: true
+  files = for file of & then `dist/${file}`
+  build ...files
+
+def main()
+  args = process.argv[2..]
+  if args.length == 0
+    buildAll()
+  else
+    build(...args)
+
+if import.meta.main
+  main()    

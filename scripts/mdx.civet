@@ -1,11 +1,6 @@
 // @ts-nocheck
 "civet autoLet" 
 
-// Use this code either:
-// - as a CLI with `civet mdx.civet <input-file.mdx>`,
-// - in your own civet code with `import * as mdx from mdx.civet`,
-// - or in your own JS code, but you'll need to compile this file to JS first.
-
 // Node
 import { parseArgs } from node:util
 import { readFile, writeFile } from node:fs/promises
@@ -18,15 +13,15 @@ import rehypeMathJax from rehype-mathjax
 
 /** MDX compiler: a <doc.mdx> filename generates a "doc.tsx" output file */
 export function compile(inputFilename: string)
-  source = await readFile inputFilename "utf8"
-  result = await mdx.compile source
+  source = await readFile inputFilename, "utf8"
+  result = await mdx.compile source,
     jsx: true,
     jsxImportSource: "https://esm.sh/react"
     remarkPlugins: [remarkMath]
     rehypePlugins: [rehypeMathJax]
     outputFormat: "program"
-  outputFilename = inputFilename.replace /\.mdx$/ ".tsx"
-  await writeFile outputFilename result.toString()
+  outputFilename = inputFilename.replace /\.mdx$/, ".tsx"
+  await writeFile outputFilename, result.toString()
 
 usage = "Usage: civet mdx.civet <input-file.mdx>"
 
@@ -50,7 +45,6 @@ function main()
 
   inputFile = process.argv[2]
   await compile inputFile
-
 
 if import.meta.main
   main()
