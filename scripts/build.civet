@@ -1,0 +1,71 @@
+"civet autoLet"
+// @ts-nocheck
+import { existsSync } from node:fs
+import { execFileSync } from node:child_process
+import { cp, mkdir, readdir, rm } from node:fs/promises
+import { extname } from node:path
+
+import * as civet from @danielx/civet
+import * as esbuild from esbuild
+
+function splitExt(path)
+  ext = extname path
+  console.log "ext:", ext
+  if ext == ""
+    console.log "*"
+    [path, ""]
+  else
+    console.log "**"
+    console.log "ext:", ext
+    console.log "ext.length", ext.length
+    console.log "path.length:", path.length
+    console.log path.length-ext.length-1
+    console.log path[..6]
+    [
+      path[..6], 
+      ext
+    ]
+
+console.log (splitExt "aaa.bbb.ccc") # => ["aaa.bbb", ".ccc"]
+console.log "---"
+// console.log (splitExt "aaa")     # => ["aaa", ""]
+
+await process.exit(0)
+
+function build(...names)
+  console.log "***"
+  if names.length == 0
+    console.error "Usage: build <name> [name...]"
+    process.exit 1
+
+  for name of names
+    if existsSync `${name}.civet`
+      `${name}.civet`
+        |> readFile &, utf8
+        |> await
+        |> civet.compile
+        |> await
+        |> writeFile `${name}.tsx`, &
+        |> await
+    else if existsSync `${name}.mdx`
+      await mdx.compile `${name}.mdx`
+    else
+      // 🚧 Warn for each non-compilable file instead (?)
+      console.error `Error: no ${name}.civet or ${name}.mdx found`
+      process.exit 1
+
+    await esbuild.build 
+      entryPoints: [`${name}.tsx`] 
+      outfile: `${name}.js`
+
+args = process.argv[2..]
+if args.length == 0
+  await rm "dist", recursive: true, force: true
+  // await mkdir "dist"
+  await cp "src", "dist", recursive: true
+  files = 
+    await readdir "dist", recursive: true
+    |> for file of & then `dist/${file}`
+  build ...files  
+else
+  build ...args
