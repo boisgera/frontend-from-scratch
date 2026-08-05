@@ -1,0 +1,19 @@
+"civet autoLet"
+import * as vanillaExtract from '@vanilla-extract/css'
+
+style := vanillaExtract.style
+  all: "unset"
+  display: "inline-block"
+  cursor: "pointer"
+  color: "#000000"
+  backgroundColor: "hsl(240, 100%, 90%)"
+  ":hover":
+    backgroundColor: 
+      "hsl(240, 100%, 85%)" 
+  fontSize: 16
+  lineHeight: 1.5
+  fontFamily: "Inter, sans-serif"
+  fontWeight: "normal"
+  border: "none"
+  padding: "10px 20px"
+  borderRadius: "6px"

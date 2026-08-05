@@ -100,6 +100,7 @@
     use it somewhere. Arf, if I need fonts I am going to have to reach
     for CSS? Nah, hard-coded imports in the HTML head is good enough.
 
+13. Use vanilla-extract for the button.
 
 TODO:
 
