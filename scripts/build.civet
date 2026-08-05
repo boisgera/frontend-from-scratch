@@ -6,7 +6,7 @@ import assert from "node:assert"
 import { existsSync } from node:fs
 import { execFileSync } from node:child_process
 import { cp, mkdir, readdir, readFile, rm, writeFile } from node:fs/promises
-import { extname } from node:path
+import { dirname, extname, join } from node:path
 
 // Third-party
 import * as civet from @danielx/civet
@@ -14,7 +14,6 @@ import * as esbuild from esbuild
 
 // Local
 import * as mdx from "./mdx.civet"
-
 
 /** "aaa.bbb.ccc" -> [ 'aaa.bbb', '.ccc' ] and "aaa" -> [ 'aaa', ''] */
 function splitExt(path)
@@ -25,7 +24,8 @@ function splitExt(path)
     ext
   ]
 
-function build(...filenames)
+/** Transpile civet, mdx and tsx files to js */
+export function build(...filenames)
   if filenames.length == 0
     console.error "Usage: build <name> [name...]"
     process.exit 1
@@ -33,24 +33,28 @@ function build(...filenames)
   for filename of filenames
     [ name, ext ] = splitExt filename
     if ext == ".civet"
-      source = await readFile `${name}.civet`, "utf8"
+      source = await readFile(`${name}.civet`, "utf8")
       compiled = await civet.compile source
-      await writeFile `${name}.tsx`, compiled
+      await writeFile(`${name}.tsx`, compiled)
     else if ext == ".mdx"
-      await mdx.compile `${name}.mdx` // generate a `${name}.tsx` file
+      await mdx.compile(`${name}.mdx`) // generate a `${name}.tsx` file
     // Now we compile the tsx file (source or generated) to js
     await esbuild.build 
       entryPoints: [`${name}.tsx`] 
       outfile: `${name}.js`
 
-function buildAll()
-  await rm "dist", recursive: true, force: true
-  await cp "src", "dist", recursive: true
-  files = await readdir "dist", recursive: true
-  files = for file of & then `dist/${file}`
-  build ...files
+/** Build all src files into the dist directory */
+export function buildAll()
+  root = import.meta.dirname |> dirname
+  src = join(root, "src")
+  dist = join(root, "dist")
+  await rm(dist, recursive: true, force: true)
+  await cp(src, dist, recursive: true)
+  files = await readdir(dist, recursive: true)
+  distFiles = for file of files then join(root, `dist/${file}`)
+  build(...distFiles)
 
-def main()
+function main()
   args = process.argv[2..]
   if args.length == 0
     buildAll()
