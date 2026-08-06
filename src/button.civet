@@ -1,7 +1,7 @@
 // @ts-nocheck
 "civet autoLet react jsxCode"
 
-import React, { useState } from "https://esm.sh/react"
+import React, { useState } from react
 
 export function Button({ children, ...rest })
   [isHovered, setIsHovered] = useState(false);  

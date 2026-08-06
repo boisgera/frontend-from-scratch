@@ -1,0 +1,25 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+import React from https://esm.sh/react
+import { css } from https://esm.sh/@emotion/css
+
+style := css
+  all: "unset"
+  display: "inline-block"
+  cursor: "pointer"
+  color: "#000000"
+  backgroundColor: "hsl(140, 55%, 65%)" 
+  fontSize: 16
+  lineHeight: 1.5
+  fontFamily: "Inter, sans-serif"
+  fontWeight: "normal"
+  border: "none"
+  padding: "10px 20px"
+  borderRadius: "6px"
+  "&:hover":
+      backgroundColor: "hsl(140, 55%, 60%)"
+
+export function Button2({ children, ...rest })
+  <button .{style} {...rest }>
+    children

@@ -1,10 +1,14 @@
 // @ts-nocheck
 "civet autoLet react jsxCode"
 
-import React from "https://esm.sh/react"
+import React from react
+
+import "./global-styles.js"
 import Page from './page.js'
 import MathText from './math-text.js'
 import { Button } from './button.js'
+import { Button2 } from './button2.js'
+import { Canvas } from ./tldraw.js
 
 ButtonDemo = =>
   <div style =
@@ -13,17 +17,28 @@ ButtonDemo = =>
     height: 200
     display: "flex"
     justifyContent: "center"
+    gap: "1em"
     alignItems: "center"
   >
-    <Button onClick= { () => alert("Hello Civet!") }>
+    <Button 
+      onClick = 
+        => alert "Hello Civet!"
+    >
+      "Click me!"
+    <Button2 
+      onClick = 
+        => alert "Hello Civet!"
+    >
       "Click me!"
 
 export App = =>
-  <h1>
-    "React App"
-  <ButtonDemo>
-  <p>
-    "Hello frontend! (from Civet+React)"
-  <Page>
-  <MathText>
+  <main>
+    <h1>
+      "Civet + React"
+    <ButtonDemo>
+    <p>
+      "Hello frontend! (from Civet+React)"
+    <Page>
+    <MathText>
+    <Canvas>
 

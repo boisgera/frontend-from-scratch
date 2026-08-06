@@ -100,18 +100,20 @@
     use it somewhere. Arf, if I need fonts I am going to have to reach
     for CSS? Nah, hard-coded imports in the HTML head is good enough.
 
-13. Use vanilla-extract for the button.
+13. ~~Use vanilla-extract for the button.~~ NAH, let's try emotion/css first
+    That suits my tastes and there is no magic. This is really nice!
+
+14. Global styles with emotion
+
+15. Insert a TLDRaw canvas. Shit I have a nasty case of double instance of
+    React (well, **maybe** that's the issue), so I turn my all my shit into
+    source maps and drop the "raw" imports from my source files.
 
 TODO:
 
-  - TODO : build script in civet, using the esbuild JS API.
+  - Shiki coloring from MDX
 
-  - CSS reset
-
-  - Basic CSS stuff. 
-  
-  - CSS in JS somehow? (but global, non-mangled). Try JSS fist
-    (ref : https://cssinjs.org/)
+  - React Three fiber 
 
   - Framer/Motion stuff
 
@@ -119,12 +121,5 @@ TODO:
 
   - Marimo React component
 
-  - StyleX stuff. Mmm afraid that wil be an issue ; even if there is a 
-    CLI, it is one that install itself in an existing "project"
-    (node, bun, etc.), and afterwards the stuff it touches requires 
-    "css imports" to work (?). So I need a esbuild/resolveStuff layer for
-    this?
 
-    Again, I have to experiment. Bun may be able to solve part of the problem
-    for me here...
   

@@ -1,12 +1,12 @@
 {
   "devDependencies": {
+    "@danielx/civet": "^0.11.15",
     "@mdx-js/mdx": "^3.1.1",
     "@types/node": "^26.1.2",
-    "rehype-mathjax": "^7.1.0",
-    "remark-math": "^6.0.0",
-    "@danielx/civet": "^0.11.15",
     "@vanilla-extract/css": "^1.21.2",
-    "esbuild": "^0.28.1"
+    "esbuild": "^0.28.1",
+    "rehype-mathjax": "^7.1.0",
+    "remark-math": "^6.0.0"
   },
   "scripts": {
     "build": "civet scripts/build.civet"
