@@ -109,13 +109,38 @@
     React (well, **maybe** that's the issue), so I turn my all my shit into
     source maps and drop the "raw" imports from my source files.
 
+    Jeez there are some licensing issues, I was not expecting that.
+    Try with excalidraw?
+
+16. Tried static generation of MDX file. But they have import, that need
+    https access (to esm.sh), so to prerender with Node I would need to
+    install a resolve hook that replaces such import with a local one...
+    At the end of the day, much more complex, I'd better go for everything
+    in node_modules. At least I am going to see if I can serve dependencies
+    out of node_modules directly and not bundle everything (which means
+    that I lose completely the transparency on the build process)
+
 TODO:
+
+  - Long/hard : work our a components and pages split, with mdx in pages
+    that use hard links and therefore automatically follow a MPA / 
+    "file-based routing" scheme. But I need to statically generate them
+    + insert (optional, for non-static stuff) hydration code, emotion cache 
+    then needs to be handled, etc.
+
+  - Smart (auto-locating) TOC for MDX, see e.g. https://blog.n.ichol.ai/packaging-latent-reasoning-as-a-real-model#two-knobs-worth-understanding
+
+    Try it with stuff that is fully static first?
 
   - Shiki coloring from MDX
 
+  - Embed Strudel?
+
   - React Three fiber 
 
-  - Framer/Motion stuff
+  - Framer/Motion stuff (try background with SVG anim and mouse tracking)
+
+  - React Flow stuff
 
   - Tldraw React component
 

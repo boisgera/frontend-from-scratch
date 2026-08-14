@@ -9,6 +9,7 @@ import MathText from './math-text.js'
 import { Button } from './button.js'
 import { Button2 } from './button2.js'
 import { Canvas } from ./tldraw.js
+import { Background } from ./background.js
 
 ButtonDemo = =>
   <div style =
@@ -33,6 +34,7 @@ ButtonDemo = =>
 
 export App = =>
   <main>
+    <Background>
     <h1>
       "Civet + React"
     <ButtonDemo>
@@ -40,5 +42,6 @@ export App = =>
       "Hello frontend! (from Civet+React)"
     <Page>
     <MathText>
+    <!-- TLDRaw experiment, off for now.
     <Canvas>
-
+    --> 

@@ -8,6 +8,9 @@ import { execFileSync } from node:child_process
 import { cp, mkdir, readdir, readFile, rm, writeFile } from node:fs/promises
 import { dirname, extname, join } from node:path
 
+// React
+import { renderToStaticMarkup } from "react-dom/server";
+
 // Third-party
 import * as civet from @danielx/civet
 import * as esbuild from esbuild
@@ -24,8 +27,30 @@ function splitExt(path)
     ext
   ]
 
+LIBS := [
+  "react"
+  "react-dom"
+  "react-dom/client"
+  "react/jsx-runtime"
+  "react/jsx-dev-runtime"
+  "@emotion/css"
+  "motion" // motion/react
+  "tldraw"
+  // "tldraw/tldraw.css" // Ooops
+]
+
 /** Transpile civet, mdx and tsx files to js */
 export function build(...filenames)
+
+  // Bundle the libraries into a single file for the browser
+  await esbuild.build
+    entryPoints: LIBS
+    bundle: true
+    splitting: true
+    format: "esm"
+    outdir: "libs"
+    define: { "process.env.NODE_ENV": '"production"' }
+
   if filenames.length == 0
     console.error "Usage: build <name> [name...]"
     process.exit 1
@@ -42,6 +67,14 @@ export function build(...filenames)
     await esbuild.build 
       entryPoints: [`${name}.tsx`] 
       outfile: `${name}.js`
+    // TODO: SR: for MDX pages, generate the `{name}.html` file too
+    // if ext == ".mdx"
+    //   console.log `SSR for ${name}.mdx\n`
+    //   { default: Page, frontmatter } := await import `${name}.js`
+    //   // html := Page() |> renderToStaticMarkup
+    //   // console.log `${name}.mdx -> HTML:`
+    //   // console.log html
+
 
 /** Build all src files into the dist directory */
 export function buildAll()
