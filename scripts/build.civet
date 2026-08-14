@@ -68,12 +68,12 @@ export function build(...filenames)
       entryPoints: [`${name}.tsx`] 
       outfile: `${name}.js`
     // TODO: SR: for MDX pages, generate the `{name}.html` file too
-    // if ext == ".mdx"
-    //   console.log `SSR for ${name}.mdx\n`
-    //   { default: Page, frontmatter } := await import `${name}.js`
-    //   // html := Page() |> renderToStaticMarkup
-    //   // console.log `${name}.mdx -> HTML:`
-    //   // console.log html
+    if ext == ".mdx"
+      console.log `SSR for ${name}.mdx\n`
+      { default: Page, frontmatter } := await import `${name}.js`
+      // html := Page() |> renderToStaticMarkup
+      // console.log `${name}.mdx -> HTML:`
+      // console.log html
 
 
 /** Build all src files into the dist directory */

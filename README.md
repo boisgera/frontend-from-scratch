@@ -118,7 +118,12 @@
     At the end of the day, much more complex, I'd better go for everything
     in node_modules. At least I am going to see if I can serve dependencies
     out of node_modules directly and not bundle everything (which means
-    that I lose completely the transparency on the build process)
+    that I lose completely the transparency on the build process).
+
+17. Gone to use of node_modules bundling with esbuild. It it slightly
+    more complex than the standard approach because I insist on NOT
+    bundling my code (for transparency and troubleshooting), only my
+    dependencies.
 
 TODO:
 
