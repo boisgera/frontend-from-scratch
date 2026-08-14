@@ -1,8 +1,8 @@
 // @ts-nocheck
 "civet autoLet react jsxCode"
 
-import React from https://esm.sh/react
-import { css } from https://esm.sh/@emotion/css
+import React from react
+import { css } from @emotion/css
 
 style := css
   all: "unset"

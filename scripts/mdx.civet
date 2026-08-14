@@ -16,7 +16,7 @@ export function compile(inputFilename: string)
   source = await readFile inputFilename, "utf8"
   result = await mdx.compile source,
     jsx: true,
-    jsxImportSource: "https://esm.sh/react"
+    jsxImportSource: "react"
     remarkPlugins: [remarkMath]
     rehypePlugins: [rehypeMathJax]
     outputFormat: "program"
