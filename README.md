@@ -125,6 +125,27 @@
     bundling my code (for transparency and troubleshooting), only my
     dependencies.
 
+    OK, I am in the SSR generation at the stage where I generate some
+    "raw" HTML for each page, with no headers, no emotion styling, 
+    no font information, etc.
+
+    I am also at a point where I need to reorganize everything a bit,
+    since I need to make my own scripts (components, etc) available
+    for the MDX pages.
+
+    The static rendered stuff is meant to drive everything, while the
+    stuff in src is merely "library stuff".
+
+    So maybe it's time to start a `pages` folder and work from there,
+    specifically with MDX pages only? Also if everything is generated,
+    including index.html the root, that changes the stuff a bit.
+    (more than a bit actually)
+
+    Yeah, remove index.html, make pages, make custom build for the pages
+    stuff specifically (refactor build), adapt serve, etc.
+    Also, `main.js` is dead. Rename `src` as `components` (mmm dunno,
+    there are other stuff there)
+
 TODO:
 
   - Long/hard : work our a components and pages split, with mdx in pages
