@@ -1,8 +1,8 @@
 // @ts-nocheck
 "civet autoLet react jsxCode"
 
-import { createRoot } from react-dom/client
+import ReactDOMClient from react-dom/client
 
 import { App } from "./app.js"
 
-document.body |> createRoot |> .render App()
+document.body |> ReactDOMClient.createRoot |> .render App()

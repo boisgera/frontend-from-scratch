@@ -1,10 +1,10 @@
 // @ts-nocheck
 "civet autoLet react jsxCode"
 
-import React, { useState } from react
+import React from react
 
 export function Button({ children, ...rest })
-  [isHovered, setIsHovered] = useState(false);  
+  [isHovered, setIsHovered] = React.useState(false);
   <button 
     style = 
       all: "unset"

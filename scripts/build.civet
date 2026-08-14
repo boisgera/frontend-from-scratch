@@ -34,7 +34,7 @@ LIBS := [
   "react/jsx-runtime"
   "react/jsx-dev-runtime"
   "@emotion/css"
-  "motion" // motion/react
+  "motion/react"
   "tldraw"
   // "tldraw/tldraw.css" // Ooops
 ]
