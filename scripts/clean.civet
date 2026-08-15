@@ -1,0 +1,7 @@
+// @ts-nocheck
+"civet autoLet"
+
+import { rm } from node:fs/promises
+
+await rm ".build", recursive: true, force: true
+await rm "dist", recursive: true, force: true

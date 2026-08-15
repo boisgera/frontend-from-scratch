@@ -1,0 +1,8 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+import React from react
+
+export function Warning({ children })
+    <div style= { color: "red" }>
+      children

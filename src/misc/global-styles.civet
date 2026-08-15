@@ -1,0 +1,43 @@
+// @ts-nocheck
+"civet autoLet"
+
+import { injectGlobal } from @emotion/css
+
+fontSize = 
+  XXS : "8px"
+  XS : "10px"
+  S : "12px"
+  M : "16px"
+  L : "20px"
+  XL : "24px"
+  XXL : "32px"
+
+injectGlobal
+  // "*, *::before, *::after":
+  //   boxSizing: "border-box"
+  //   margin: 0
+  html:
+    WebkitTextSizeAdjust: "none"
+  "img, picture, video, canvas":
+    display: "block"
+    maxWidth: "100%"
+
+  body: 
+
+    WebkitFontSmoothing: "antialiased"
+    fontFamily: "Inter, sans-serif"
+    fontOpticalSizing: "auto"
+    fontSize: "16px"
+    lineHeight: 1.5
+
+    main:
+      maxWidth: "65ch"
+      margin: "0 auto"
+      padding: "1em"
+
+    code: 
+      fontFamily: "Fira Code, monospace"
+    "pre:has(> code)":
+      backgroundColor: "#f5f5f5"
+      padding: "1em"
+

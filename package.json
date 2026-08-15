@@ -13,7 +13,10 @@
     "remark-math": "^6.0.0"
   },
   "scripts": {
-    "build": "civet scripts/build.civet"
+    "build": "civet scripts/build.civet",
+    "ship": "civet scripts/ship.civet",
+    "serve": "npx serve .build",
+    "clean": "civet scripts/clean.civet"
   },
   "dependencies": {
     "@emotion/css": "^11.13.5",

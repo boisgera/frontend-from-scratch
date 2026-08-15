@@ -39,18 +39,19 @@ LIBS := [
   // "tldraw/tldraw.css" // Ooops
 ]
 
-/** Transpile civet, mdx and tsx files to js */
-export function build(...filenames)
+OUTDIR := ".build" // relative to project root
 
-  // Bundle the libraries into a single file for the browser
+export function buildLibs()
   await esbuild.build
     entryPoints: LIBS
     bundle: true
     splitting: true
     format: "esm"
-    outdir: "libs"
+    outdir: OUTDIR
     define: { "process.env.NODE_ENV": '"production"' }
 
+/** Transpile civet, mdx and tsx files to js, in-place */
+export function buildJs(...filenames)
   if filenames.length == 0
     console.error "Usage: build <name> [name...]"
     process.exit 1
@@ -78,23 +79,22 @@ export function build(...filenames)
       await writeFile(`${name}.html`, html)
 
 
-/** Build all src files into the dist directory */
 export function buildAll()
   root = import.meta.dirname |> dirname
   src = join(root, "src")
-  dist = join(root, "dist")
-  await rm(dist, recursive: true, force: true)
-  await cp(src, dist, recursive: true)
-  files = await readdir(dist, recursive: true)
-  distFiles = for file of files then join(root, `dist/${file}`)
-  build(...distFiles)
+  outdir = join(root, OUTDIR)
+  await rm(outdir, recursive: true, force: true)
+
+  await buildLibs()
+
+  await cp src, outdir, recursive: true
+
+  files = await readdir(outdir, recursive: true)
+  outFiles = for file of files then join(root, `${OUTDIR}/${file}`)
+  await buildJs(...outFiles)
 
 function main()
-  args = process.argv[2..]
-  if args.length == 0
-    buildAll()
-  else
-    build(...args)
+  buildAll()
 
 if import.meta.main
   main()    
