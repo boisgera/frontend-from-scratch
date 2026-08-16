@@ -1,0 +1,21 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+import React from react
+import { css } from @emotion/css
+
+style := css
+  backgroundColor: "hsl(45, 100%, 95%)"
+  borderLeft: "4px solid hsl(45, 100%, 51%)"
+  borderRadius: "0 6px 6px 0"
+  padding: "1em 1.25em"
+  margin: "1.5em 0"
+  color: "hsl(35, 70%, 25%)"
+  "&:first-child":
+    marginTop: 0
+  "&:last-child":
+    marginBottom: 0
+
+export function Warning({ children })
+  <div .{style}>
+    children
