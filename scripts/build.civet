@@ -15,9 +15,10 @@ import { renderToStaticMarkup } from "react-dom/server";
 import * as civet from @danielx/civet
 import * as esbuild from esbuild
 import { parseHTML } from linkedom
-
-// Local
-import * as mdx from "./mdx.civet"
+// 📝 The math plugins require that we use the async MDX compiler API.
+import * as mdx from @mdx-js/mdx
+import remarkMath from remark-math
+import rehypeMathJax from rehype-mathjax
 
 /** "aaa.bbb.ccc" -> [ 'aaa.bbb', '.ccc' ] and "aaa" -> [ 'aaa', ''] */
 function splitExt(path)
@@ -43,6 +44,18 @@ LIBS := [
 OUTDIR := ".build" // relative to project root
 LIBDIR := "libs" // relative to OUTDIR
 BASE := "base.html" // relative to OUTDIR, wraps rendered MDX pages
+
+/** MDX compiler: a <doc.mdx> filename generates a "doc.tsx" output file */
+function compileMdx(inputFilename: string)
+  source = await readFile inputFilename, "utf8"
+  result = await mdx.compile source,
+    jsx: true,
+    jsxImportSource: "react"
+    remarkPlugins: [remarkMath]
+    rehypePlugins: [rehypeMathJax]
+    outputFormat: "program"
+  outputFilename = inputFilename.replace /\.mdx$/, ".tsx"
+  await writeFile outputFilename, result.toString()
 
 /** Inject a rendered page's body markup into the base.html shell */
 function wrapPage(bodyHtml: string, title?: string)
@@ -76,7 +89,7 @@ export function buildJs(...filenames)
       compiled = await civet.compile source
       await writeFile(`${name}.tsx`, compiled)
     else if ext == ".mdx"
-      await mdx.compile(`${name}.mdx`) // generate a `${name}.tsx` file
+      await compileMdx(`${name}.mdx`) // generate a `${name}.tsx` file
     // Now we compile the tsx file (source or generated) to js
     if existsSync `${name}.tsx`
       await esbuild.build
