@@ -146,6 +146,12 @@
     Also, `main.js` is dead. Rename `src` as `components` (mmm dunno,
     there are other stuff there)
 
+18. At the end of the day, I go for a single hierarchy with .civet code and
+    .mdx pages. So I can either "co-localize" content and code or not, 
+    there is no rigid convention.
+
+
+
 TODO:
 
   - Long/hard : work our a components and pages split, with mdx in pages
@@ -157,6 +163,11 @@ TODO:
   - Smart (auto-locating) TOC for MDX, see e.g. https://blog.n.ichol.ai/packaging-latent-reasoning-as-a-real-model#two-knobs-worth-understanding
 
     Try it with stuff that is fully static first?
+
+  - TODO:
+      - rehydration when needed
+      - layouts (?) (wrapper of mdx content). ATML, let the use do 
+      - explore the frontmatter stuff, that could be handy.   
 
   - Shiki coloring from MDX
 
