@@ -83,8 +83,8 @@ export function buildJs(...filenames)
         entryPoints: [`${name}.tsx`]
         outfile: `${name}.js`
 
-  // Runs only after every file above is compiled, so that a page's
-  // imports (e.g. other components) are guaranteed to exist on disk.
+/** Render each compiled mdx page's js module to HTML, wrapped in base.html */
+export function buildHtml(...filenames)
   for filename of filenames
     [ name, ext ] = splitExt filename
     if ext == ".mdx"
@@ -92,7 +92,6 @@ export function buildJs(...filenames)
       body := Page() |> renderToStaticMarkup
       html := await wrapPage(body, frontmatter?.title)
       await writeFile(`${name}.html`, html)
-
 
 export function buildAll()
   root = import.meta.dirname |> dirname
@@ -105,6 +104,9 @@ export function buildAll()
   files = await readdir(outdir, recursive: true)
   outFiles = for file of files then join(root, `${OUTDIR}/${file}`)
   await buildJs(...outFiles)
+  // Runs only after every file above is compiled, so that a page's
+  // imports (e.g. other components) are guaranteed to exist on disk.
+  await buildHtml(...outFiles)
 
   await buildLibs()
 
