@@ -40,6 +40,7 @@ LIBS := [
 ]
 
 OUTDIR := ".build" // relative to project root
+LIBDIR := "libs" // relative to OUTDIR
 
 export function buildLibs()
   await esbuild.build
@@ -47,7 +48,7 @@ export function buildLibs()
     bundle: true
     splitting: true
     format: "esm"
-    outdir: OUTDIR
+    outdir: join(OUTDIR, LIBDIR)
     define: { "process.env.NODE_ENV": '"production"' }
 
 /** Transpile civet, mdx and tsx files to js, in-place */
@@ -65,9 +66,10 @@ export function buildJs(...filenames)
     else if ext == ".mdx"
       await mdx.compile(`${name}.mdx`) // generate a `${name}.tsx` file
     // Now we compile the tsx file (source or generated) to js
-    await esbuild.build
-      entryPoints: [`${name}.tsx`]
-      outfile: `${name}.js`
+    if existsSync `${name}.tsx`
+      await esbuild.build
+        entryPoints: [`${name}.tsx`]
+        outfile: `${name}.js`
 
   // Runs only after every file above is compiled, so that a page's
   // imports (e.g. other components) are guaranteed to exist on disk.
@@ -85,13 +87,13 @@ export function buildAll()
   outdir = join(root, OUTDIR)
   await rm(outdir, recursive: true, force: true)
 
-  await buildLibs()
-
   await cp src, outdir, recursive: true
 
   files = await readdir(outdir, recursive: true)
   outFiles = for file of files then join(root, `${OUTDIR}/${file}`)
   await buildJs(...outFiles)
+
+  await buildLibs()
 
 function main()
   buildAll()
