@@ -3,7 +3,7 @@
 
 import React from react
 
-import "./global-styles.js"
+import "../styles.js"
 import Page from './page.js'
 import MathText from './math-text.js'
 import { Button } from './button.js'

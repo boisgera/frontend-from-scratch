@@ -13,21 +13,17 @@ fontSize =
   XXL : "32px"
 
 injectGlobal
-  // "*, *::before, *::after":
-  //   boxSizing: "border-box"
-  //   margin: 0
   html:
     WebkitTextSizeAdjust: "none"
-  "img, picture, video, canvas":
-    display: "block"
-    maxWidth: "100%"
+    "img, picture, video, canvas":
+      display: "block"
+      maxWidth: "100%"
 
   body: 
-
     WebkitFontSmoothing: "antialiased"
     fontFamily: "Inter, sans-serif"
     fontOpticalSizing: "auto"
-    fontSize: "16px"
+    fontSize: fontSize.M
     lineHeight: 1.5
 
     main:
@@ -40,4 +36,3 @@ injectGlobal
     "pre:has(> code)":
       backgroundColor: "#f5f5f5"
       padding: "1em"
-

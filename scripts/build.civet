@@ -15,6 +15,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import * as civet from @danielx/civet
 import * as esbuild from esbuild
 import { parseHTML } from linkedom
+import { cache as emotionCache } from @emotion/css
+import createEmotionServer from @emotion/server/create-instance
 // 📝 The math plugins require that we use the async MDX compiler API.
 import * as mdx from @mdx-js/mdx
 import remarkMath from remark-math
@@ -45,6 +47,10 @@ OUTDIR := ".build" // relative to project root
 LIBDIR := "libs" // relative to OUTDIR
 BASE := "base.html" // relative to OUTDIR, wraps rendered MDX pages
 
+// Extracts the CSS emotion registered (via `css()`/`injectGlobal`) into
+// its shared cache while a page's js module tree was imported/rendered.
+{ extractCritical } := createEmotionServer(emotionCache)
+
 /** MDX compiler: a <doc.mdx> filename generates a "doc.tsx" output file */
 function compileMdx(inputFilename: string)
   source = await readFile inputFilename, "utf8"
@@ -57,11 +63,15 @@ function compileMdx(inputFilename: string)
   outputFilename = inputFilename.replace /\.mdx$/, ".tsx"
   await writeFile outputFilename, result.toString()
 
-/** Inject a rendered page's body markup into the base.html shell */
-function wrapPage(bodyHtml: string, title?: string)
+/** Inject a rendered page's body markup (and its emotion CSS) into the base.html shell */
+function wrapPage(bodyHtml: string, css: string, title?: string)
   root = import.meta.dirname |> dirname
   template = await readFile(join(root, OUTDIR, BASE), "utf8")
   { document } := parseHTML(template)
+  if css
+    style = document.createElement "style"
+    style.textContent = css
+    document.head.appendChild style
   document.body.innerHTML = bodyHtml
   if title
     document.title = title
@@ -103,7 +113,8 @@ export function buildHtml(...filenames)
     if ext == ".mdx"
       { default: Page, frontmatter } := await import `${name}.js`
       body := Page() |> renderToStaticMarkup
-      html := await wrapPage(body, frontmatter?.title)
+      { css } := extractCritical body
+      html := await wrapPage(body, css, frontmatter?.title)
       await writeFile(`${name}.html`, html)
 
 export function buildAll()
