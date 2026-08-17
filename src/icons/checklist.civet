@@ -1,0 +1,11 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+// Tabler icon "checklist" (outline), inlined since this project has no icon
+// package (the boisgera/python original vendors it as a local icon).
+import { Icon } from ./icon.js
+
+paths := ["M9.615 20h-2.615a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8", "M14 19l2 2l4 -4", "M9 8h4", "M9 12h2"]
+
+export function ChecklistIcon(props)
+  <Icon paths=paths {...props}>

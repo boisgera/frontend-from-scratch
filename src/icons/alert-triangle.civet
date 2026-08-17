@@ -1,0 +1,11 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+// Tabler icon "alert-triangle" (outline), inlined since this project has no
+// icon package (the boisgera/python original pulls it from astro-icon).
+import { Icon } from ./icon.js
+
+paths := ["M12 9v4", "M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0", "M12 16h.01"]
+
+export function AlertTriangleIcon(props)
+  <Icon paths=paths {...props}>
