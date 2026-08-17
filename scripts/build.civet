@@ -56,7 +56,7 @@ function compileMdx(inputFilename: string)
     jsx: true,
     jsxImportSource: "@emotion/react"
     remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkGfm, remarkMath]
-    rehypePlugins: [rehypeMathJax, [rehypeShiki, { theme: "github-dark" }]]
+    rehypePlugins: [rehypeMathJax, [rehypeShiki, { theme: "github-dark", langs: ["python", "bash", "console", "jsx"] }]]
     outputFormat: "program"
   outputFilename = inputFilename.replace /\.mdx$/, ".tsx"
   await writeFile outputFilename, result.toString()
