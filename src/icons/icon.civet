@@ -1,0 +1,20 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+// Shared wrapper for the Tabler-style icons in this directory: each icon
+// module just supplies its stroke `paths` and any extra props (className,
+// etc.) are forwarded to the <svg>.
+export function Icon({ paths, ...props })
+  <svg
+    viewBox="0 0 24 24"
+    width="1rem"
+    height="1rem"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    for d, i of paths
+      <path key=i d=d>

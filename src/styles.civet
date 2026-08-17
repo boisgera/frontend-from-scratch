@@ -26,9 +26,11 @@ styles =
     lineHeight: "36px"
     padding: "18px"
 
+    // Documents need to be wrapped in a main element for this to work.
     main:
       maxWidth: "768px"
-      margin: "3rem auto 1rem auto"
+      marginInline: "auto"
+      paddingInline: "1rem"
 
     "img, picture, video, canvas":
       display: "block"

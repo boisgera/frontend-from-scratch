@@ -1,0 +1,11 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+// Tabler icon "arrows-maximize" (outline), inlined since this project has
+// no icon package (the boisgera/python original pulls it from astro-icon).
+import { Icon } from ./icon.js
+
+paths := ["M16 4l4 0l0 4", "M14 10l6 -6", "M8 20l-4 0l0 -4", "M4 20l6 -6", "M16 20l4 0l0 -4", "M14 14l6 6", "M8 4l-4 0l0 4", "M4 4l6 6"]
+
+export function ArrowsMaximizeIcon(props)
+  <Icon paths=paths {...props}>

@@ -1,10 +1,14 @@
 // @ts-nocheck
 "civet autoLet react jsxCode"
 
+import { ArrowsMaximizeIcon } from ../icons/arrows-maximize.js
+import { ArrowsMinimizeIcon } from ../icons/arrows-minimize.js
+
 // Colors ported from boisgera/python's src/components/Admonition.astro
 // (light-mode values only; that Astro component also supports a dark
-// theme, icons via astro-icon, and a locked/non-collapsible mode, none
-// of which this project has an equivalent for).
+// theme and a locked/non-collapsible mode, neither of which this project
+// has an equivalent for). The open/closed toggle icons are ported too,
+// via src/icons (see there for why they're inlined SVG rather than a package).
 colors :=
   note:
     light: "#e0f2fe"
@@ -29,15 +33,27 @@ export function Admonition({ type = "note", title, open = true, children })
   { light, dark } := colors[type] ?? colors.note
   label := title ?? capitalize(type)
   <details
-    open=open
+    open
     css =
+      marginBottom: "1rem"
       border: `0.125rem solid ${dark}`
       borderRadius: "0.25rem"
-      marginBottom: "1rem"
+      "&[open] .icon-open":
+        display: "inline"
+      "&[open] .icon-closed":
+        display: "none"
+      "&:not([open]) .icon-open":
+        display: "none"
+      "&:not([open]) .icon-closed":
+        display: "inline"
   >
     <summary
       css =
-        padding: "1rem"
+        paddingInline: "2rem"
+        paddingBlock: "1rem"
+        display: "flex"
+        alignItems: "center"
+        justifyContent: "space-between"
         backgroundColor: light
         borderRadius: "0.25rem"
         listStyle: "none"
@@ -46,9 +62,13 @@ export function Admonition({ type = "note", title, open = true, children })
         "&::-webkit-details-marker":
           display: "none"
     >
-      label
+      <span>label</span>
+      <span css = { color: dark, display: "flex" }>
+        <ArrowsMaximizeIcon className="icon-closed">
+        <ArrowsMinimizeIcon className="icon-open">
     <div
       css =
-        margin: "1rem"
+        paddingInline: "2rem"
+        paddingBlock: "1rem"
     >
       children
