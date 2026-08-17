@@ -8,12 +8,14 @@ import { Cube } from './components/cube.js'
 
 <Styles />
 
+<main>
+
 This is the root page.
 
 <Button onClick={() => alert("Hydrated!")}>Click me</Button>
 
-<div style={{ display: 'flex', justifyContent: 'center'}}>
-  <div>
+<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+  <div style={{ display: "inline-block" }}>
     <Cube />
   </div>
 </div>
@@ -30,3 +32,5 @@ This is the root page.
  - [Math stuff](math.html)
  - [Random Page](page.html)
  - [Lectures](lectures/index.html)
+
+ </main>

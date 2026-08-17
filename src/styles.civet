@@ -17,12 +17,13 @@ styles =
   html:
     WebkitTextSizeAdjust: "none"
     hyphens: "auto"
+    fontSize: "18px"
 
   body:
     WebkitFontSmoothing: "antialiased"
     fontFamily: "Inter, sans-serif"
     fontOpticalSizing: "auto"
-    fontSize: fontSize.L
+    fontSize: fontSize.M
     lineHeight: "36px"
     padding: "18px"
 
