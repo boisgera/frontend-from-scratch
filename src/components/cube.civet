@@ -1,0 +1,41 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+import React from react
+import { Canvas, useFrame } from @react-three/fiber
+
+wrapperStyle :=
+  width: "400px"
+  height: "400px"
+
+// Default camera sits at z=5 with a 75° vertical fov, so the visible
+// half-height there is 5*tan(37.5°) ≈ 3.84 units; a side of 3.5 keeps
+// the cube's rotated corner-to-corner extent just inside that frame.
+boxArgs := [3.5, 3.5, 3.5]
+lightPosition := [10, 10, 10]
+
+function Box(props)
+  ref := React.useRef()
+  useFrame (state, delta) =>
+    ref.current.rotation.x += delta
+    ref.current.rotation.y += delta * 0.5
+  <mesh
+    {...props}
+    ref=ref
+  >
+    <boxGeometry args=boxArgs>
+    <meshStandardMaterial color="hotpink">
+
+export function Cube()
+  <div style=wrapperStyle>
+    <Canvas>
+      <ambientLight intensity=1>
+      // decay=0 turns off physically-correct distance falloff, so a
+      // moderate intensity stays visible from the light's position
+      // instead of needing implausibly large numbers.
+      <pointLight
+        position=lightPosition
+        intensity=2
+        decay=0
+      >
+      <Box>

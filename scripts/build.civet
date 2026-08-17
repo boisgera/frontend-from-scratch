@@ -52,6 +52,8 @@ LIBS := [
   "@emotion/cache"
   "motion/react"
   "tldraw"
+  "three"
+  "@react-three/fiber"
   // "tldraw/tldraw.css" // Ooops
 ]
 
