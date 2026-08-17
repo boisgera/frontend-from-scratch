@@ -30,8 +30,12 @@ export function LectureHeader({ frontmatter })
     >
       author
       if authorTitle or authorAffiliation
-        <br>
-        [authorTitle, authorAffiliation].filter(Boolean).join(", ")
+        [
+          <br key="author-br">
+          [authorTitle, authorAffiliation].filter(Boolean).join(", ")
+        ]
       if date
-        <br>
-        date
+        [
+          <br key="date-br">
+          date
+        ]

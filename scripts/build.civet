@@ -10,7 +10,12 @@ import { basename, dirname, extname, join } from node:path
 
 // React
 import { createElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
+// renderToStaticMarkup omits the <!-- --> comments React inserts between
+// adjacent text-only children; without them the browser's HTML parser
+// merges those children into a single text node, and hydrateRoot then
+// finds fewer nodes than the client tree expects. renderToString keeps
+// them, so it's the one that's actually safe to hydrate later.
+import { renderToString } from "react-dom/server";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import createEmotionServer from "@emotion/server/create-instance";
@@ -49,6 +54,8 @@ LIBS := [
   "tldraw"
   // "tldraw/tldraw.css" // Ooops
 ]
+
+ROOT := import.meta.dirname |> dirname
 
 OUTDIR := ".build"  // relative to project root
 LIBDIR := "libs"    // relative to OUTDIR
@@ -91,8 +98,7 @@ function compileMdx(inputFilename: string)
     and hydrateRoot would flag the extra server-rendered <style> node as
     a mismatch. */
 function wrapPage(bodyHtml: string, opts: { title?: string, styleTags?: string, hydrate?: boolean, jsName?: string })
-  root = import.meta.dirname |> dirname
-  template = await readFile(join(root, OUTDIR, BASE), "utf8")
+  template = await readFile(join(ROOT, OUTDIR, BASE), "utf8")
   { document } := parseHTML(template)
   document.body.innerHTML = bodyHtml
   if opts.title
@@ -165,7 +171,7 @@ export function buildHtml(...filenames)
       cache := createCache({ key: EMOTION_KEY })
       { extractCriticalToChunks, constructStyleTagsFromChunks } := createEmotionServer(cache)
       element := createElement(CacheProvider, { value: cache }, createElement(Page))
-      body := renderToStaticMarkup(element)
+      body := renderToString(element)
       styleTags := constructStyleTagsFromChunks(extractCriticalToChunks(body))
       html := await wrapPage(body, {
         title: frontmatter?.title
@@ -176,15 +182,14 @@ export function buildHtml(...filenames)
       await writeFile(`${name}.html`, html)
 
 export function buildAll()
-  root = import.meta.dirname |> dirname
-  src = join(root, "src")
-  outdir = join(root, OUTDIR)
+  src = join(ROOT, "src")
+  outdir = join(ROOT, OUTDIR)
   await rm(outdir, recursive: true, force: true)
 
   await cp src, outdir, recursive: true
 
   files = await readdir(outdir, recursive: true)
-  outFiles = for file of files then join(root, `${OUTDIR}/${file}`)
+  outFiles = for file of files then join(ROOT, `${OUTDIR}/${file}`)
   await buildJs(...outFiles)
   // Runs only after every file above is compiled, so that a page's
   // imports (e.g. other components) are guaranteed to exist on disk.
