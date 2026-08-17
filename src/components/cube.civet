@@ -8,11 +8,18 @@ wrapperStyle :=
   width: "400px"
   height: "400px"
 
-// Default camera sits at z=5 with a 75° vertical fov, so the visible
-// half-height there is 5*tan(37.5°) ≈ 3.84 units; a side of 3.5 keeps
-// the cube's rotated corner-to-corner extent just inside that frame.
 boxArgs := [3.5, 3.5, 3.5]
 lightPosition := [10, 10, 10]
+// The default camera (fov 75, z=5) sits close enough to a cube this
+// size that its faces get strong perspective distortion (near face
+// much bigger than far face). A narrower fov + a proportionally
+// farther camera keeps the cube filling the frame with a flatter,
+// less fish-eyed look -- half-height at z=11 with fov 35 is
+// 11*tan(17.5°) ≈ 3.47, comfortably inside the cube's worst-case
+// (fully rotated) half-diagonal of 3.5*sqrt(3)/2 ≈ 3.03.
+cameraProps :=
+  position: [0, 0, 11]
+  fov: 35
 
 function Box(props)
   ref := React.useRef()
@@ -28,7 +35,7 @@ function Box(props)
 
 export function Cube()
   <div style=wrapperStyle>
-    <Canvas>
+    <Canvas camera=cameraProps>
       <ambientLight intensity=1>
       // decay=0 turns off physically-correct distance falloff, so a
       // moderate intensity stays visible from the light's position
