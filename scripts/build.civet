@@ -51,14 +51,26 @@ BASE := "base.html" // relative to OUTDIR, wraps rendered MDX pages
 
 /** MDX compiler: a <doc.mdx> filename generates a "doc.tsx" output file */
 function compileMdx(inputFilename: string)
+  [name, ext] := splitExt inputFilename
+  assert.equal ext, ".mdx"
   source = await readFile inputFilename, "utf8"
-  result = await mdx.compile source,
-    jsx: true,
+  result = await mdx.compile 
+    source
+    jsx: true
     jsxImportSource: "@emotion/react"
-    remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkGfm, remarkMath]
-    rehypePlugins: [rehypeMathJax, [rehypeShiki, { theme: "github-dark", langs: ["python", "bash", "console", "jsx"] }]]
+    remarkPlugins:
+      • remarkFrontmatter 
+      • remarkMdxFrontmatter 
+      • remarkGfm
+      • remarkMath
+    rehypePlugins: 
+      • rehypeMathJax
+      • • rehypeShiki
+        • theme: "github-dark"
+          langs: ["python", "bash", "console", "jsx"]
     outputFormat: "program"
-  outputFilename = inputFilename.replace /\.mdx$/, ".tsx"
+
+  outputFilename = `${name}.tsx`
   await writeFile outputFilename, result.toString()
 
 /** Inject a rendered page's body markup into the base.html shell.
