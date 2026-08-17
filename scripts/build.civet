@@ -15,12 +15,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 import * as civet from @danielx/civet
 import * as esbuild from esbuild
 import { parseHTML } from linkedom
-import { cache as emotionCache } from @emotion/css
-import createEmotionServer from @emotion/server/create-instance
-// 📝 The math plugins require that we use the async MDX compiler API.
+// 📝 The mdx math plugins require that we use the async MDX compiler API.
 import * as mdx from @mdx-js/mdx
 import remarkMath from remark-math
 import rehypeMathJax from rehype-mathjax
+import remarkFrontmatter from remark-frontmatter
+import remarkMdxFrontmatter from remark-mdx-frontmatter
+import remarkGfm from remark-gfm
+import rehypeShiki from @shikijs/rehype
 
 /** "aaa.bbb.ccc" -> [ 'aaa.bbb', '.ccc' ] and "aaa" -> [ 'aaa', ''] */
 function splitExt(path)
@@ -35,43 +37,39 @@ LIBS := [
   "react"
   "react-dom"
   "react-dom/client"
-  "react/jsx-runtime"
-  "react/jsx-dev-runtime"
-  "@emotion/css"
+  "@emotion/react"
+  "@emotion/react/jsx-runtime"
+  "@emotion/react/jsx-dev-runtime"
   "motion/react"
   "tldraw"
   // "tldraw/tldraw.css" // Ooops
 ]
 
-OUTDIR := ".build" // relative to project root
-LIBDIR := "libs" // relative to OUTDIR
+OUTDIR := ".build"  // relative to project root
+LIBDIR := "libs"    // relative to OUTDIR
 BASE := "base.html" // relative to OUTDIR, wraps rendered MDX pages
-
-// Extracts the CSS emotion registered (via `css()`/`injectGlobal`) into
-// its shared cache while a page's js module tree was imported/rendered.
-{ extractCritical } := createEmotionServer(emotionCache)
 
 /** MDX compiler: a <doc.mdx> filename generates a "doc.tsx" output file */
 function compileMdx(inputFilename: string)
   source = await readFile inputFilename, "utf8"
   result = await mdx.compile source,
     jsx: true,
-    jsxImportSource: "react"
-    remarkPlugins: [remarkMath]
-    rehypePlugins: [rehypeMathJax]
+    jsxImportSource: "@emotion/react"
+    remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkGfm, remarkMath]
+    rehypePlugins: [rehypeMathJax, [rehypeShiki, { theme: "github-dark" }]]
     outputFormat: "program"
   outputFilename = inputFilename.replace /\.mdx$/, ".tsx"
   await writeFile outputFilename, result.toString()
 
-/** Inject a rendered page's body markup (and its emotion CSS) into the base.html shell */
-function wrapPage(bodyHtml: string, css: string, title?: string)
+/** Inject a rendered page's body markup into the base.html shell.
+    @emotion/react's SSR works out of the box (emotion.sh/docs/ssr,
+    "Default Approach"): renderToStaticMarkup already inlines each
+    Global/css-prop style as a <style> tag alongside its element, so
+    there's no separate critical-CSS extraction step to run. */
+function wrapPage(bodyHtml: string, title?: string)
   root = import.meta.dirname |> dirname
   template = await readFile(join(root, OUTDIR, BASE), "utf8")
   { document } := parseHTML(template)
-  if css
-    style = document.createElement "style"
-    style.textContent = css
-    document.head.appendChild style
   document.body.innerHTML = bodyHtml
   if title
     document.title = title
@@ -100,11 +98,16 @@ export function buildJs(...filenames)
       await writeFile(`${name}.tsx`, compiled)
     else if ext == ".mdx"
       await compileMdx(`${name}.mdx`) // generate a `${name}.tsx` file
-    // Now we compile the tsx file (source or generated) to js
+    // Now we compile the tsx file (source or generated) to js.
+    // jsxImportSource is @emotion/react project-wide (mdx.compile above
+    // targets the same runtime), so any component or page can use the
+    // `css` prop with no per-file pragma.
     if existsSync `${name}.tsx`
       await esbuild.build
         entryPoints: [`${name}.tsx`]
         outfile: `${name}.js`
+        jsx: "automatic"
+        jsxImportSource: "@emotion/react"
 
 /** Render each compiled mdx page's js module to HTML, wrapped in base.html */
 export function buildHtml(...filenames)
@@ -113,8 +116,7 @@ export function buildHtml(...filenames)
     if ext == ".mdx"
       { default: Page, frontmatter } := await import `${name}.js`
       body := Page() |> renderToStaticMarkup
-      { css } := extractCritical body
-      html := await wrapPage(body, css, frontmatter?.title)
+      html := await wrapPage(body, frontmatter?.title)
       await writeFile(`${name}.html`, html)
 
 export function buildAll()

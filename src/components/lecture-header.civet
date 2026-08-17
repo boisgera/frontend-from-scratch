@@ -1,0 +1,37 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+// Adapted from boisgera/python's src/components/Header.astro
+// (drops the gravatar avatar image -- no external avatar fetching here).
+export function LectureHeader({ frontmatter })
+  { title, description, date, author, authorTitle, authorAffiliation } := frontmatter ?? {}
+  <header
+    css =
+      marginBottom: "3rem"
+  >
+    <h1
+      css =
+        fontSize: "2.25rem"
+        lineHeight: 1
+        fontWeight: 700
+        color: "#020617"
+        marginBottom: "1rem"
+    >
+      title
+    if description
+      <p css = { color: "#64748b" }>
+        description
+    <p
+      css =
+        margin: 0
+        fontSize: "0.875rem"
+        lineHeight: "1.25rem"
+        color: "#1e293b"
+    >
+      author
+      if authorTitle or authorAffiliation
+        <br>
+        [authorTitle, authorAffiliation].filter(Boolean).join(", ")
+      if date
+        <br>
+        date

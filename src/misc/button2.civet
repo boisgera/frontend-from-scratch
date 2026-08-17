@@ -1,10 +1,7 @@
 // @ts-nocheck
 "civet autoLet react jsxCode"
 
-import React from react
-import { css } from @emotion/css
-
-style := css
+style :=
   all: "unset"
   display: "inline-block"
   cursor: "pointer"
@@ -21,5 +18,5 @@ style := css
       backgroundColor: "hsl(140, 55%, 60%)"
 
 export function Button2({ children, ...rest })
-  <button .{style} {...rest }>
+  <button css=style {...rest }>
     children

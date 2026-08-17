@@ -1,38 +1,103 @@
 // @ts-nocheck
-"civet autoLet"
+"civet autoLet react jsxCode"
 
-import { injectGlobal } from @emotion/css
+import { Global } from @emotion/react
 
-fontSize = 
-  XXS : "8px"
-  XS : "10px"
-  S : "12px"
-  M : "16px"
-  L : "20px"
-  XL : "24px"
-  XXL : "32px"
+fontSize =
+  XXS: "0.625rem"
+  XS: "0.75rem"
+  S: "0.875rem"
+  M: "1rem"
+  L: "1.125rem"
+  XL: "1.5rem"
+  XXL: "2.25rem"
 
-injectGlobal
+// Typographic/layout choices ported from boisgera/python's MDXLayout.astro
+styles =
   html:
     WebkitTextSizeAdjust: "none"
-    "img, picture, video, canvas":
-      display: "block"
-      maxWidth: "100%"
+    hyphens: "auto"
 
-  body: 
+  body:
     WebkitFontSmoothing: "antialiased"
     fontFamily: "Inter, sans-serif"
     fontOpticalSizing: "auto"
-    fontSize: fontSize.M
-    lineHeight: 1.5
+    fontSize: fontSize.L
+    lineHeight: "36px"
+    padding: "18px"
 
     main:
-      maxWidth: "65ch"
-      margin: "0 auto"
-      padding: "1em"
+      maxWidth: "768px"
+      margin: "3rem auto 1rem auto"
 
-    code: 
+    "img, picture, video, canvas":
+      display: "block"
+      maxWidth: "100%"
+    "img, video":
+      margin: "auto"
+      marginBottom: "1.5rem"
+      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+    figure:
+      margin: 0
+      marginBottom: "1.5rem"
+
+    p:
+      marginTop: 0
+      marginBottom: "2rem"
+
+    "a:link, a:visited":
+      color: "#000000"
+    "a:hover, a:active":
+      color: "#2563eb"
+    a:
+      transition: "color 0.15s ease"
+
+    h1:
+      fontSize: fontSize.XXL
+      marginTop: "98px"
+    h2:
+      fontSize: fontSize.XL
+      marginTop: "72px"
+    h3:
+      fontSize: fontSize.M
+      marginTop: "36px"
+
+    table:
+      width: "100%"
+      borderCollapse: "collapse"
+      lineHeight: 1.5
+      marginBottom: "3rem"
+    "thead th":
+      fontWeight: 600
+      padding: "10px 12px"
+      borderBottom: "1px solid #e5e7eb"
+    "tbody td":
+      padding: "10px 12px"
+      borderBottom: "1px solid #f1f5f9"
+      verticalAlign: "top"
+    "tbody tr:hover":
+      backgroundColor: "#f9fafb"
+
+    ".dull":
+      filter: "grayscale(60%) brightness(0.85)"
+      transition: "filter 0.3s ease"
+    ".dull:hover":
+      filter: "none"
+
+    ":not(pre) > code":
+      fontVariantLigatures: "none"
       fontFamily: "Fira Code, monospace"
+      backgroundColor: "#e2e8f0"
+      color: "black"
+      borderRadius: "0.25rem"
+      padding: "0rem 0.25rem"
     "pre:has(> code)":
       backgroundColor: "#f5f5f5"
-      padding: "1em"
+      borderRadius: "0.25rem"
+      overflowX: "auto"
+      padding: "1rem 2rem"
+    "pre > code":
+      lineHeight: "1rem"
+
+export function Styles()
+  <Global {styles}>
