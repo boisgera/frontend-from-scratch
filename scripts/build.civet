@@ -91,6 +91,14 @@ function compileMdx(inputFilename: string)
   outputFilename = `${name}.tsx`
   await writeFile outputFilename, result.toString()
 
+RENDER_MODES := ["static", "hydrate", "client"]
+// "client" ships zero SSR markup, so any component unsafe to import under
+// Node (e.g. WebGL canvases, browser-only globals) is only ever touched in
+// the browser. That's why it's the default: it can't fail a build the way
+// "static" or "hydrate" can, since those both require successfully calling
+// renderToString on the page.
+DEFAULT_RENDER_MODE := "client"
+
 /** Inject a rendered page's body markup into the base.html shell.
     Styles are passed in as already-extracted <style> tags (see buildHtml)
     and land in <head>, not interleaved into the body: Emotion's "Default
@@ -99,7 +107,7 @@ function compileMdx(inputFilename: string)
     into <head> as a side effect instead of rendering them into the tree,
     and hydrateRoot would flag the extra server-rendered <style> node as
     a mismatch. */
-function wrapPage(bodyHtml: string, opts: { title?: string, styleTags?: string, hydrate?: boolean, jsName?: string })
+function wrapPage(bodyHtml: string, opts: { title?: string, styleTags?: string, render: string, jsName?: string })
   template = await readFile(join(ROOT, OUTDIR, BASE), "utf8")
   { document } := parseHTML(template)
   document.body.innerHTML = bodyHtml
@@ -110,14 +118,20 @@ function wrapPage(bodyHtml: string, opts: { title?: string, styleTags?: string, 
     styleContainer.innerHTML = opts.styleTags
     for style of [...styleContainer.children]
       document.head.appendChild style
-  if opts.hydrate
+  if opts.render == "hydrate" or opts.render == "client"
+    // "hydrate" mounts onto server-rendered markup already in body (must
+    // match <Page/>'s client tree exactly, hence hydrateRoot); "client"
+    // mounts onto an empty body, so createRoot is used instead since
+    // there's no server markup to reconcile against.
+    mount := if opts.render == "hydrate"
+      "ReactDOMClient.hydrateRoot(document.body, element);"
+    else
+      "ReactDOMClient.createRoot(document.body).render(element);"
     script = document.createElement "script"
     script.type = "module"
-    // Hydrates directly onto <body> (no wrapper div), so body's rendered
-    // markup must match <Page/>'s client tree exactly. That's why this
-    // script is appended to <head> rather than to <body>: as a trailing
-    // body child it would itself become an unexpected node and trip a
-    // hydration mismatch the moment hydrateRoot runs.
+    // Appended to <head>, not <body>: for "hydrate", a trailing body child
+    // would itself become an unexpected node and trip a hydration mismatch
+    // the moment hydrateRoot runs.
     script.textContent = `
       import ReactDOMClient from "react-dom/client";
       import React from "react";
@@ -125,7 +139,8 @@ function wrapPage(bodyHtml: string, opts: { title?: string, styleTags?: string, 
       import { CacheProvider } from "@emotion/react";
       import Page from "./${opts.jsName}";
       const cache = createCache({ key: "${EMOTION_KEY}" });
-      ReactDOMClient.hydrateRoot(document.body, React.createElement(CacheProvider, { value: cache }, React.createElement(Page)));
+      const element = React.createElement(CacheProvider, { value: cache }, React.createElement(Page));
+      ${mount}
     `
     document.head.appendChild script
   "<!DOCTYPE html>\n" + document.documentElement.outerHTML
@@ -170,15 +185,24 @@ export function buildHtml(...filenames)
     [ name, ext ] = splitExt filename
     if ext == ".mdx"
       { default: Page, frontmatter } := await import `${name}.js`
-      cache := createCache({ key: EMOTION_KEY })
-      { extractCriticalToChunks, constructStyleTagsFromChunks } := createEmotionServer(cache)
-      element := createElement(CacheProvider, { value: cache }, createElement(Page))
-      body := renderToString(element)
-      styleTags := constructStyleTagsFromChunks(extractCriticalToChunks(body))
+      render := frontmatter?.render ?? DEFAULT_RENDER_MODE
+      assert.ok RENDER_MODES.includes(render), `${name}.mdx: invalid render mode "${render}" (expected one of ${RENDER_MODES.join ", "})`
+
+      body = ""
+      styleTags = ""
+      // "client" mode never calls renderToString: the whole point is to
+      // avoid running page code (e.g. WebGL canvases) under Node at all.
+      if render != "client"
+        cache := createCache({ key: EMOTION_KEY })
+        { extractCriticalToChunks, constructStyleTagsFromChunks } := createEmotionServer(cache)
+        element := createElement(CacheProvider, { value: cache }, createElement(Page))
+        body = renderToString(element)
+        styleTags = constructStyleTagsFromChunks(extractCriticalToChunks(body))
+
       html := await wrapPage(body, {
         title: frontmatter?.title
         styleTags: styleTags
-        hydrate: frontmatter?.hydrate
+        render: render
         jsName: basename(`${name}.js`)
       })
       await writeFile(`${name}.html`, html)

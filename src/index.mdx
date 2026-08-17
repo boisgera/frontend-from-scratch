@@ -1,5 +1,5 @@
 ---
-hydrate: true
+render: client
 ---
 import { Styles } from './styles.js'
 import { Warning } from './components/warning.js'
@@ -12,7 +12,11 @@ This is the root page.
 
 <Button onClick={() => alert("Hydrated!")}>Click me</Button>
 
-<Cube />
+<div style={{ display: 'flex', justifyContent: 'center'}}>
+  <div>
+    <Cube />
+  </div>
+</div>
 
 [Link to the subpage](sub/subpage.html)
 
