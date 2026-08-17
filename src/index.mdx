@@ -1,14 +1,21 @@
+---
+hydrate: true
+---
 import { Styles } from './styles.js'
 import { Warning } from './components/warning.js'
+import { Button } from './components/button.js'
 
 <Styles />
 
 This is the root page.
 
+<Button onClick={() => alert("Hydrated!")}>Click me</Button>
+
 [Link to the subpage](sub/subpage.html)
 
 <Warning>
   <h3>Warning</h3>
+
   This is a warning message.
 </Warning>
 

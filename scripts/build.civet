@@ -6,10 +6,14 @@ import assert from "node:assert"
 import { existsSync } from node:fs
 import { execFileSync } from node:child_process
 import { cp, mkdir, readdir, readFile, rm, writeFile } from node:fs/promises
-import { dirname, extname, join } from node:path
+import { basename, dirname, extname, join } from node:path
 
 // React
+import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
+import createEmotionServer from "@emotion/server/create-instance";
 
 // Third-party
 import * as civet from @danielx/civet
@@ -40,6 +44,7 @@ LIBS := [
   "@emotion/react"
   "@emotion/react/jsx-runtime"
   "@emotion/react/jsx-dev-runtime"
+  "@emotion/cache"
   "motion/react"
   "tldraw"
   // "tldraw/tldraw.css" // Ooops
@@ -48,6 +53,10 @@ LIBS := [
 OUTDIR := ".build"  // relative to project root
 LIBDIR := "libs"    // relative to OUTDIR
 BASE := "base.html" // relative to OUTDIR, wraps rendered MDX pages
+// Shared between the server-side cache (below) and the client-side one
+// (injected into the hydration <script>) so extracted <style> tags are
+// recognized rather than duplicated once the client cache takes over.
+EMOTION_KEY := "app"
 
 /** MDX compiler: a <doc.mdx> filename generates a "doc.tsx" output file */
 function compileMdx(inputFilename: string)
@@ -74,17 +83,43 @@ function compileMdx(inputFilename: string)
   await writeFile outputFilename, result.toString()
 
 /** Inject a rendered page's body markup into the base.html shell.
-    @emotion/react's SSR works out of the box (emotion.sh/docs/ssr,
-    "Default Approach"): renderToStaticMarkup already inlines each
-    Global/css-prop style as a <style> tag alongside its element, so
-    there's no separate critical-CSS extraction step to run. */
-function wrapPage(bodyHtml: string, title?: string)
+    Styles are passed in as already-extracted <style> tags (see buildHtml)
+    and land in <head>, not interleaved into the body: Emotion's "Default
+    Approach" (styles rendered as inline siblings) only works for pages
+    that are never hydrated, since the client-side cache inserts styles
+    into <head> as a side effect instead of rendering them into the tree,
+    and hydrateRoot would flag the extra server-rendered <style> node as
+    a mismatch. */
+function wrapPage(bodyHtml: string, opts: { title?: string, styleTags?: string, hydrate?: boolean, jsName?: string })
   root = import.meta.dirname |> dirname
   template = await readFile(join(root, OUTDIR, BASE), "utf8")
   { document } := parseHTML(template)
   document.body.innerHTML = bodyHtml
-  if title
-    document.title = title
+  if opts.title
+    document.title = opts.title
+  if opts.styleTags
+    styleContainer = document.createElement "div"
+    styleContainer.innerHTML = opts.styleTags
+    for style of [...styleContainer.children]
+      document.head.appendChild style
+  if opts.hydrate
+    script = document.createElement "script"
+    script.type = "module"
+    // Hydrates directly onto <body> (no wrapper div), so body's rendered
+    // markup must match <Page/>'s client tree exactly. That's why this
+    // script is appended to <head> rather than to <body>: as a trailing
+    // body child it would itself become an unexpected node and trip a
+    // hydration mismatch the moment hydrateRoot runs.
+    script.textContent = `
+      import ReactDOMClient from "react-dom/client";
+      import React from "react";
+      import createCache from "@emotion/cache";
+      import { CacheProvider } from "@emotion/react";
+      import Page from "./${opts.jsName}";
+      const cache = createCache({ key: "${EMOTION_KEY}" });
+      ReactDOMClient.hydrateRoot(document.body, React.createElement(CacheProvider, { value: cache }, React.createElement(Page)));
+    `
+    document.head.appendChild script
   "<!DOCTYPE html>\n" + document.documentElement.outerHTML
 
 export function buildLibs()
@@ -127,8 +162,17 @@ export function buildHtml(...filenames)
     [ name, ext ] = splitExt filename
     if ext == ".mdx"
       { default: Page, frontmatter } := await import `${name}.js`
-      body := Page() |> renderToStaticMarkup
-      html := await wrapPage(body, frontmatter?.title)
+      cache := createCache({ key: EMOTION_KEY })
+      { extractCriticalToChunks, constructStyleTagsFromChunks } := createEmotionServer(cache)
+      element := createElement(CacheProvider, { value: cache }, createElement(Page))
+      body := renderToStaticMarkup(element)
+      styleTags := constructStyleTagsFromChunks(extractCriticalToChunks(body))
+      html := await wrapPage(body, {
+        title: frontmatter?.title
+        styleTags: styleTags
+        hydrate: frontmatter?.hydrate
+        jsName: basename(`${name}.js`)
+      })
       await writeFile(`${name}.html`, html)
 
 export function buildAll()

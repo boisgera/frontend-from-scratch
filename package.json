@@ -2,6 +2,7 @@
   "type": "module",
   "devDependencies": {
     "@danielx/civet": "^0.11.15",
+    "@emotion/server": "^11.11.0",
     "@mdx-js/mdx": "^3.1.1",
     "@shikijs/rehype": "^4.4.3",
     "@types/node": "^26.1.2",
@@ -21,6 +22,7 @@
     "clean": "civet scripts/clean.civet"
   },
   "dependencies": {
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "motion": "^13.1.0",
     "react": "^19.2.8",
