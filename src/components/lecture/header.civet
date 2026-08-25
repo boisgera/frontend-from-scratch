@@ -3,10 +3,10 @@
 
 // Adapted from boisgera/python's src/components/Header.astro
 // (uses the author's GitHub avatar instead of Gravatar).
-import { GithubIcon } from ../icons/github.js
-import { fontSize } from ../styles.js
+import { GithubIcon } from ../../icons/github.js
+import { fontSize } from ../../styles.js
 
-export function LectureHeader({ frontmatter })
+export function Header({ frontmatter })
   { title, subtitle, author } := frontmatter ?? {}
   { name: authorName, title: authorTitle, affiliation: authorAffiliation, github, website } := author ?? {}
   githubHandle := github?.replace(/^@/, "")

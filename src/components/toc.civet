@@ -1,0 +1,67 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+import { Children, isValidElement } from react
+import { fontSize } from ../styles.js
+
+// Tunable: which heading levels appear in the TOC. Body h1s (many
+// lectures use them as their top-level sections, e.g. lec01's
+// "Introduction"/"Loops") are distinct from Lecture.Header's own <h1>
+// page title, which lives outside `children` entirely -- so including
+// h1 here can't collide with it. h4 is left out as too fine-grained.
+TOC_LEVELS := [1, 2, 3]
+HEADING_TAGS := new Set(["h1", "h2", "h3"])
+MIN_DEPTH := Math.min(...TOC_LEVELS)
+
+// A heading's own children can mix plain strings with nested inline
+// elements (e.g. `## The `if` statement` -> <h2>The <code>if</code>
+// statement</h2>), so extracting its flat display text needs its own
+// small recursive walk -- scoped to just that heading's props.children.
+function extractText(node)
+  if typeof node is "string" or typeof node is "number"
+    String node
+  else if Array.isArray node
+    node.map(extractText).join ""
+  else if isValidElement node
+    extractText node.props?.children
+  else
+    ""
+
+// Ids come from rehype-slug at compile time, so this only ever reads
+// `children` -- it never rewrites or clones anything.
+export function extractHeadings(children)
+  entries := []
+  Children.forEach children, (child) =>
+    if isValidElement(child) and typeof child.type is "string" and HEADING_TAGS.has(child.type)
+      depth := Number(child.type.slice(1))
+      text := extractText(child.props.children).replace(/\s+/g, " ").trim()
+      entries.push { id: child.props.id, text, depth }
+  entries
+
+export function Toc({ entries })
+  if entries.length is 0
+    return null
+  <nav
+    aria-label="Table of contents"
+    className="toc"
+    css =
+      fontSize: fontSize.S
+      lineHeight: 1.4
+  >
+    <ol css = { listStyle: "none", margin: 0, padding: 0 }>
+      for { id, text, depth } of entries
+        <li
+          key={id}
+          css =
+            marginBottom: "0.6rem"
+            marginLeft: `${(depth - MIN_DEPTH) * 0.9}rem`
+        >
+          <a
+            href={`#${id}`}
+            css =
+              color: "#475569"
+              textDecoration: "none"
+              "&:hover":
+                color: "#2563eb"
+          >
+            text

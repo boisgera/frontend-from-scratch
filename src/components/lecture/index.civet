@@ -1,0 +1,17 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+import { Styles } from ../../styles.js
+import { Header } from ./header.js
+import { extractHeadings, Toc } from ../toc.js
+
+export function Lecture({ frontmatter, children })
+  entries := extractHeadings children
+  <div className="lecture-layout">
+    <main>
+      <Styles />
+      <Header frontmatter={frontmatter} />
+      children
+    <Toc entries={entries} />
+
+Lecture.Header = Header
