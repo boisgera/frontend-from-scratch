@@ -179,9 +179,10 @@ TODO:
 
   - React Flow stuff
 
-  - Tldraw React component
+  - Tldraw React component (ou excalidraw)
 
   - Marimo React component
 
   - Pagefind Stuff?
   
+  - Try Microlighter: https://daverupert.com/2026/08/microlighter/

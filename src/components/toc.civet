@@ -1,0 +1,158 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+import { Children, isValidElement } from react
+import { fontSize } from ../styles.js
+import { ListIcon } from ../icons/list.js
+import { ChevronDownIcon } from ../icons/chevron-down.js
+
+// Tunable: which heading levels appear in the TOC. Body h1s (many
+// lectures use them as their top-level sections, e.g. lec01's
+// "Introduction"/"Loops") are distinct from Lecture.Header's own <h1>
+// page title, which lives outside `children` entirely -- so including
+// h1 here can't collide with it. h4 is left out as too fine-grained.
+TOC_LEVELS := [1, 2, 3]
+HEADING_TAGS := new Set(["h1", "h2", "h3"])
+
+// A heading's own children can mix plain strings with nested inline
+// elements (e.g. `## The `if` statement` -> <h2>The <code>if</code>
+// statement</h2>), so extracting its flat display text needs its own
+// small recursive walk -- scoped to just that heading's props.children.
+function extractText(node)
+  if typeof node is "string" or typeof node is "number"
+    String node
+  else if Array.isArray node
+    node.map(extractText).join ""
+  else if isValidElement node
+    extractText node.props?.children
+  else
+    ""
+
+// Ids come from rehype-slug at compile time, so this only ever reads
+// `children` -- it never rewrites or clones anything.
+export function extractHeadings(children)
+  entries := []
+  Children.forEach children, (child) =>
+    if isValidElement(child) and typeof child.type is "string" and HEADING_TAGS.has(child.type)
+      depth := Number(child.type.slice(1))
+      text := extractText(child.props.children).replace(/\s+/g, " ").trim()
+      entries.push { id: child.props.id, text, depth }
+  entries
+
+// Turns the flat, depth-tagged list back into a real tree (h3s nested
+// under the nearest preceding h2, h2s under the nearest preceding h1),
+// so h3s can be collapsed as a group under their h2 instead of just
+// looking indented.
+function buildTree(entries)
+  root := { depth: 0, children: [] }
+  stack := [root]
+  for entry of entries
+    node := { ...entry, children: [] }
+    while stack.length > 1 and stack[stack.length - 1].depth >= entry.depth
+      stack.pop()
+    stack[stack.length - 1].children.push node
+    stack.push node
+  root.children
+
+linkCss :=
+  display: "block"
+  overflow: "hidden"
+  textOverflow: "ellipsis"
+  whiteSpace: "nowrap"
+  color: "#475569"
+  textDecoration: "none"
+  "&:hover":
+    color: "#2563eb"
+
+sublistCss :=
+  listStyle: "none"
+  margin: 0
+  padding: 0
+  paddingLeft: "1.1rem"
+  paddingTop: "0.4rem"
+
+// Shared between the outer "Contents" toggle and every h2 toggle so
+// emotion reuses one class for it -- the rotate rule is just "this
+// element has [open], so its .toc-chevron descendant rotates", which
+// works per-instance regardless of how many elements share the class.
+chevronToggleCss :=
+  "&[open] .toc-chevron":
+    transform: "rotate(0deg)"
+  "&:not([open]) .toc-chevron":
+    transform: "rotate(-90deg)"
+
+// h2s with h3 children collapse behind their own toggle (closed by
+// default, to keep a long TOC short); everything else -- h1s, and h2s
+// or h3s with no children -- just renders its link, plus an always-open
+// nested list if it has children (h1 > h2 is never collapsed, only
+// h2 > h3 is, per the ask).
+function renderNodes(nodes)
+  for node of nodes
+    hasChildren := node.children.length > 0
+    if node.depth is 2 and hasChildren
+      <li key={node.id} css = { marginBottom: "0.6rem" }>
+        <details name="toc-h2" css=chevronToggleCss>
+          <summary
+            css =
+              display: "flex"
+              alignItems: "center"
+              gap: "0.4rem"
+              cursor: "pointer"
+              listStyle: "none"
+              "&::-webkit-details-marker":
+                display: "none"
+          >
+            <a href={`#${node.id}`} css = { ...linkCss, flex: "1 1 auto", minWidth: 0 }>
+              node.text
+            <ChevronDownIcon className="toc-chevron" css = { flexShrink: 0, transition: "transform 0.15s ease" } />
+          <ol css=sublistCss>
+            renderNodes node.children
+    else
+      <li key={node.id} css = { marginBottom: "0.6rem" }>
+        <a href={`#${node.id}`} css=linkCss>
+          node.text
+        if hasChildren
+          <ol css=sublistCss>
+            renderNodes node.children
+
+export function Toc({ entries })
+  if entries.length is 0
+    return null
+  tree := buildTree entries
+  <nav
+    aria-label="Table of contents"
+    className="toc"
+    css =
+      fontSize: fontSize.S
+      lineHeight: 1.4
+  >
+    <details
+      open
+      css={{
+        display: "flex"
+        flexDirection: "column"
+        flex: "1 1 auto"
+        minHeight: 0
+        ...chevronToggleCss
+      }}
+    >
+      <summary
+        css =
+          display: "flex"
+          alignItems: "center"
+          justifyContent: "space-between"
+          gap: "0.4rem"
+          fontWeight: 700
+          marginBottom: "0.75rem"
+          cursor: "pointer"
+          listStyle: "none"
+          flexShrink: 0
+          "&::-webkit-details-marker":
+            display: "none"
+      >
+        <span css = { display: "flex", alignItems: "center", gap: "0.4rem" }>
+          <ListIcon />
+          "Contents"
+        <ChevronDownIcon className="toc-chevron" css = { transition: "transform 0.15s ease" } />
+      <ol className="toc-list" css = { listStyle: "none", margin: 0, padding: 0 }>
+        renderNodes tree

@@ -27,6 +27,7 @@ import { parseHTML } from linkedom
 // 📝 The mdx math plugins require that we use the async MDX compiler API.
 import * as mdx from @mdx-js/mdx
 import remarkMath from remark-math
+import rehypeSlug from rehype-slug
 import rehypeMathJax from rehype-mathjax
 import remarkFrontmatter from remark-frontmatter
 import remarkMdxFrontmatter from remark-mdx-frontmatter
@@ -81,7 +82,8 @@ function compileMdx(inputFilename: string)
       • remarkMdxFrontmatter 
       • remarkGfm
       • remarkMath
-    rehypePlugins: 
+    rehypePlugins:
+      • rehypeSlug
       • rehypeMathJax
       • • rehypeShiki
         • theme: "github-dark"

@@ -10,6 +10,7 @@
     "esbuild": "^0.28.1",
     "linkedom": "^0.18.13",
     "rehype-mathjax": "^7.1.0",
+    "rehype-slug": "^6.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",

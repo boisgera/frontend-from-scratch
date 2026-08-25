@@ -3,7 +3,7 @@
 
 import { Global } from @emotion/react
 
-fontSize =
+export fontSize =
   XXS: "0.625rem"
   XS: "0.75rem"
   S: "0.875rem"
@@ -27,11 +27,55 @@ styles =
     lineHeight: "36px"
     padding: "18px"
 
+    // Three symmetric columns (1fr / main / 1fr) keep main centered
+    // within whatever width .lecture-layout ends up with -- and that
+    // width is itself capped at 768 (main) + 2*3rem (gaps) + 260 (toc)
+    // = 1136px and centered as a block (marginInline: auto), so: above
+    // that content width, main keeps its full 768px and left/right
+    // margins grow together, staying equal; below it, the grid shrinks
+    // main via min(768px, 100%) while the two 1fr tracks keep splitting
+    // the leftover space evenly, so margins stay equal at every step in
+    // between too. The @media breakpoint below hides .toc at exactly
+    // the viewport width where this cap stops applying (1136px content
+    // + body's own 2*18px padding = 1172px) -- any lower and .toc's
+    // fixed 260px would no longer fit its shrinking track and would
+    // overflow into main instead of just disappearing.
+    ".lecture-layout":
+      display: "grid"
+      gridTemplateColumns: "1fr min(768px, 100%) 1fr"
+      columnGap: "3rem"
+      alignItems: "start"
+      maxWidth: "1136px"
+      marginInline: "auto"
+
     // Documents need to be wrapped in a main element for this to work.
     main:
-      maxWidth: "768px"
-      marginInline: "auto"
+      gridColumn: "2"
+      width: "100%"
       paddingInline: "1rem"
+
+    // overflowY lives on .toc-list, not here: the scrollbar it produces
+    // must not run alongside the "Contents" header/chevron row above it.
+    // justifySelf keeps it hugging main's edge rather than centered (or
+    // stranded far right) in its own, potentially much wider, 1fr column.
+    ".toc":
+      gridColumn: "3"
+      justifySelf: "start"
+      position: "sticky"
+      top: "2rem"
+      width: "260px"
+      maxHeight: "calc(100vh - 4rem)"
+      display: "flex"
+      flexDirection: "column"
+
+    // Scrolls independently of the "Contents" header/chevron above it
+    // (minHeight: 0 is what lets a flex child actually shrink and scroll
+    // instead of pushing .toc past its maxHeight).
+    ".toc-list":
+      flex: "1 1 auto"
+      minHeight: 0
+      overflowY: "auto"
+      paddingRight: "0.5rem"
 
     "img, picture, video, canvas":
       display: "block"
@@ -101,6 +145,12 @@ styles =
       padding: "1rem 2rem"
     "pre > code":
       lineHeight: "1rem"
+
+  // 1136px .lecture-layout cap + body's 2*18px padding: the viewport
+  // width right below which the cap above stops fully applying.
+  "@media (max-width: 1172px)":
+    ".toc":
+      display: "none"
 
 export function Styles()
   <Global {styles}>

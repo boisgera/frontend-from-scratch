@@ -1,0 +1,11 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+// Tabler icon "chevron-down" (outline), inlined since this project has no
+// icon package (the boisgera/python original vendors it as a local icon).
+import { Icon } from ./icon.js
+
+paths := ["M6 9l6 6l6 -6"]
+
+export function ChevronDownIcon(props)
+  <Icon paths=paths {...props}>

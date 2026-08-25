@@ -1,20 +1,20 @@
 ---
 render: static
 title: "Object-Oriented Programming 2"
-description: "Duck typing, inheritance, and protocols"
+subtitle: "Duck typing, inheritance, and protocols"
 date: "2026-04-28 18:00"
-author: "Sébastien Boisgérault"
-authorTitle: "Associate Professor"
-authorAffiliation: "ITN Mines Paris – PSL"
+author:
+  name: "Sébastien Boisgérault"
+  email: "Sebastien.Boisgerault@minesparis.psl.eu"
+  title: "Associate Professor"
+  affiliation: "ITN Mines Paris – PSL"
+  github: "@boisgera"
+  website: "https://eul.ink"
 ---
-import { Styles } from '../styles.js'
 import { Admonition } from '../components/admonition.js'
-import { LectureHeader } from '../components/lecture-header.js'
+import { Lecture } from '../components/lecture.js'
 
-<Styles />
-<LectureHeader frontmatter={frontmatter} />
-
-<main>
+<Lecture frontmatter={frontmatter}>
 
 <img
   src="assets/lego.jpg"
@@ -863,4 +863,4 @@ ok
 Test passed.
 ```
 
-</main>
+</Lecture>
