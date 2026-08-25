@@ -5,12 +5,25 @@ import { Styles } from './styles.js'
 import { Warning } from './components/warning.js'
 import { Button } from './components/button.js'
 import { Cube } from './components/cube.js'
+import { Mermaid } from './components/mermaid.js'
+
 
 <Styles />
 
 <main>
 
 This is the root page.
+
+
+<Mermaid chart={`
+flowchart TD
+  A(Start) --> B{Is it sunny?}
+  B -- Yes --> C[Go to the park]
+  B -- No --> D[Stay indoors]
+  C --> E[Finish]
+  D --> E
+`} />
+
 
 <Button onClick={() => alert("Hydrated!")}>Click me</Button>
 
@@ -27,6 +40,7 @@ This is the root page.
 
   This is a warning message.
 </Warning>
+
 
 
  - [Math stuff](math.html)

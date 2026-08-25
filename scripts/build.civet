@@ -55,6 +55,7 @@ LIBS := [
   "tldraw"
   "three"
   "@react-three/fiber"
+  "beautiful-mermaid"
   // "tldraw/tldraw.css" // Ooops
 ]
 

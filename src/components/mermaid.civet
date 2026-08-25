@@ -1,0 +1,29 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+import { renderMermaidSVG, THEMES } from beautiful-mermaid
+import React from react
+
+// Site-palette defaults so an unstyled <Mermaid> blends into the page
+// (styles.civet's own heading/muted/link colors) rather than one of
+// beautiful-mermaid's built-in named themes.
+siteColors :=
+  bg: "transparent"
+  fg: "#020617"
+  accent: "#2563eb"
+  muted: "#64748b"
+
+export function Mermaid({ chart, theme, bg, fg, accent, muted, transparent = true })
+  { svg, error } := React.useMemo(() =>
+    colors := if theme then THEMES[theme] else siteColors
+    overrides := { ...(bg and { bg }), ...(fg and { fg }), ...(accent and { accent }), ...(muted and { muted }) }
+    try
+      { svg: renderMermaidSVG(chart, { ...colors, ...overrides, transparent }), error: null }
+    catch err
+      { svg: null, error: if err instanceof Error then err else new Error(String(err)) }
+  , [chart, theme, bg, fg, accent, muted, transparent])
+
+  if error
+    <pre>{error.message}</pre>
+  else
+    <div className="mermaid-diagram" dangerouslySetInnerHTML={{ __html: svg }}>
