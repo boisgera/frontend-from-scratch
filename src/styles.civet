@@ -27,20 +27,15 @@ styles =
     lineHeight: "36px"
     padding: "18px"
 
-    // Three symmetric columns (1fr / main / 1fr) so main never shifts
-    // when .toc is empty/hidden -- but capped at its own natural content
-    // width and centered as a block (marginInline: auto), so once a
-    // viewport is wide enough for that content to fit, .toc sits flush
-    // against main (like any normal docs sidebar) instead of hugging the
-    // left edge of a much-wider-than-260px 1fr column, which is what was
-    // producing a big empty gap on the right that read as "off-center".
+    // Three symmetric columns (1fr / main / 1fr): main's own column is
+    // always the same width regardless of what's in the third one, so
+    // main stays exactly page-centered whether .toc is present, empty,
+    // or hidden -- it must never shift to accommodate the sidebar.
     ".lecture-layout":
       display: "grid"
       gridTemplateColumns: "1fr min(768px, 100%) 1fr"
       columnGap: "3rem"
       alignItems: "start"
-      maxWidth: "calc(768px + 2 * 3rem + 260px)"
-      marginInline: "auto"
 
     // Documents need to be wrapped in a main element for this to work.
     main:
