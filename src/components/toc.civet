@@ -2,7 +2,7 @@
 "civet autoLet react jsxCode"
 
 import { Children, isValidElement } from react
-import { fontSize } from ../styles.js
+import { fontSize, space } from ../styles.js
 import { ListIcon } from ../icons/list.js
 import { ChevronDownIcon } from ../icons/chevron-down.js
 
@@ -68,8 +68,10 @@ sublistCss :=
   listStyle: "none"
   margin: 0
   padding: 0
+  // Not on the space scale: calibrated to align nested list markers,
+  // not a general-purpose spacing value.
   paddingLeft: "1.1rem"
-  paddingTop: "0.4rem"
+  paddingTop: space.XS
 
 // Shared between the outer "Contents" toggle and every h2 toggle so
 // emotion reuses one class for it -- the rotate rule is just "this
@@ -90,13 +92,13 @@ function renderNodes(nodes)
   for node of nodes
     hasChildren := node.children.length > 0
     if node.depth is 2 and hasChildren
-      <li key={node.id} css = { marginBottom: "0.6rem" }>
+      <li key={node.id} css = { marginBottom: space.XS }>
         <details name="toc-h2" css=chevronToggleCss>
           <summary
             css =
               display: "flex"
               alignItems: "center"
-              gap: "0.4rem"
+              gap: space.XS
               cursor: "pointer"
               listStyle: "none"
               "&::-webkit-details-marker":
@@ -108,7 +110,7 @@ function renderNodes(nodes)
           <ol css=sublistCss>
             renderNodes node.children
     else
-      <li key={node.id} css = { marginBottom: "0.6rem" }>
+      <li key={node.id} css = { marginBottom: space.XS }>
         <a href={`#${node.id}`} css=linkCss>
           node.text
         if hasChildren
@@ -142,16 +144,16 @@ export function Toc({ entries })
             display: "flex"
             alignItems: "center"
             justifyContent: "space-between"
-            gap: "0.4rem"
+            gap: space.XS
             fontWeight: 700
-            marginBottom: "0.75rem"
+            marginBottom: space.S
             cursor: "pointer"
             listStyle: "none"
             flexShrink: 0
             "&::-webkit-details-marker":
               display: "none"
         >
-          <span css = { display: "flex", alignItems: "center", gap: "0.4rem" }>
+          <span css = { display: "flex", alignItems: "center", gap: space.XS }>
             <ListIcon />
             "Contents"
           <ChevronDownIcon className="toc-chevron" css = { transition: "transform 0.15s ease" } />

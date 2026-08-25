@@ -12,6 +12,15 @@ export fontSize =
   XL: "1.5rem"
   XXL: "2.25rem"
 
+export space =
+  XXS: "0.25rem"
+  XS: "0.5rem"
+  S: "0.75rem"
+  M: "1rem"
+  L: "1.5rem"
+  XL: "2rem"
+  XXL: "3rem"
+
 // Shared layout constants (px). mainMaxWidth/mainMinWidth/tocWidth/gap
 // are the numbers from the ask; bodyPadding is body's own inline
 // padding, reused below so the TOC breakpoint stays derived rather than
@@ -61,7 +70,7 @@ styles =
       minWidth: `${mainMinWidth}px`
       width: "100%"
       marginInline: "auto"
-      paddingInline: "1rem"
+      paddingInline: space.M
 
     // Absolutely positioned relative to .lecture-layout, so it never
     // participates in the layout that centers main. Anchored off
@@ -104,22 +113,22 @@ styles =
       flex: "1 1 auto"
       minHeight: 0
       overflowY: "auto"
-      paddingRight: "0.5rem"
+      paddingRight: space.XS
 
     "img, picture, video, canvas":
       display: "block"
       maxWidth: "100%"
     "img, video":
       margin: "auto"
-      marginBottom: "1.5rem"
+      marginBottom: space.L
       boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
     figure:
       margin: 0
-      marginBottom: "1.5rem"
+      marginBottom: space.L
 
     p:
       marginTop: 0
-      marginBottom: "2rem"
+      marginBottom: space.XL
 
     "a:link, a:visited":
       color: "#000000"
@@ -142,7 +151,7 @@ styles =
       width: "100%"
       borderCollapse: "collapse"
       lineHeight: 1.5
-      marginBottom: "3rem"
+      marginBottom: space.XXL
     "thead th":
       fontWeight: 600
       padding: "10px 12px"
@@ -166,12 +175,12 @@ styles =
       backgroundColor: "#e2e8f0"
       color: "black"
       borderRadius: "0.25rem"
-      padding: "0rem 0.25rem"
+      padding: `0 ${space.XXS}`
     "pre:has(> code)":
       backgroundColor: "#f5f5f5"
       borderRadius: "0.25rem"
       overflowX: "auto"
-      padding: "1rem 2rem"
+      padding: `${space.M} ${space.XL}`
     "pre > code":
       lineHeight: "1rem"
 

@@ -4,7 +4,7 @@
 // Adapted from boisgera/python's src/components/Header.astro
 // (uses the author's GitHub avatar instead of Gravatar).
 import { GithubIcon } from ../icons/github.js
-import { fontSize } from ../styles.js
+import { fontSize, space } from ../styles.js
 
 export function Header({ frontmatter })
   { title, subtitle, author } := frontmatter ?? {}
@@ -13,23 +13,23 @@ export function Header({ frontmatter })
   avatarUrl := if githubHandle then `https://github.com/${githubHandle}.png?size=128` else undefined
   <header
     css =
-      marginBottom: "3rem"
+      marginBottom: space.XXL
   >
-    <div css = { marginBottom: "1.5rem" }>
+    <div css = { marginBottom: space.L }>
       <h1
         css =
           fontSize: fontSize.XXL
           lineHeight: 1
           fontWeight: 700
           color: "#020617"
-          marginBottom: "1rem"
+          marginBottom: space.M
       >
         title
       if subtitle
         <p css = { color: "#64748b" }>
           subtitle
     if authorName
-      <div css = { display: "flex", justifyContent: "left", gap: "1rem" }>
+      <div css = { display: "flex", justifyContent: "left", gap: space.M }>
         if avatarUrl
           <img
             src={avatarUrl}
@@ -63,7 +63,7 @@ export function Header({ frontmatter })
                 css =
                   display: "inline-flex"
                   alignItems: "center"
-                  gap: "0.35rem"
+                  gap: space.XXS
               >
                 if githubHandle
                   <a
@@ -73,7 +73,7 @@ export function Header({ frontmatter })
                     css =
                       display: "inline-flex"
                       alignItems: "center"
-                      gap: "0.3rem"
+                      gap: space.XXS
                       color: "inherit"
                       textDecoration: "none"
                   >
