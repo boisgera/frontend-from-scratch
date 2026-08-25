@@ -22,7 +22,7 @@ By default, a computer program executes the instructions in the order
 in which they are provided, line by line, and stops once the last 
 instruction has been executed.
 
-For example, the python program `main.py` containing the following code
+For example, the Python program `main.py` containing the following code
 
 ```python
 print("Hey!")
@@ -40,19 +40,15 @@ Let's go!
 ```
 
 However, some control flow constructs allow you to alter this execution flow 
-when needed. They include:
+when needed. They include conditional execution, loops, function calls
+and exceptions.
 
- 1. [**Conditional execution**](#conditional-execution)
- 2. [**Loops**](#loops)
- 3. [**Function calls**](#function-calls)
- 4. [**Exceptions**](#exceptions)
-
-# Conditional execution
+# Conditional Execution
 
 If statements allow you to execute a block of code only if a certain condition is met. 
 The condition is a boolean expression, so let's dive into this first.
 
-## Boolean expressions
+## Boolean Expressions
 
 The boolean type `bool` can take two values: `False` and `True`.
 
@@ -161,7 +157,7 @@ x != y
 x is not y
 ```
 
-Refer to the section on [Equality and Identity](./lec07-equality-and-identity) for more details.
+Refer to the section on [Equality and Identity](./lec07-equality-and-identity.html) for more details.
 
 ### Priorities
 
@@ -169,7 +165,7 @@ Refer to the section on [Equality and Identity](./lec07-equality-and-identity) f
 
 [precedence]: https://docs.python.org/3/reference/expressions.html#operator-precedence
 
-Some boolean expressions may seem ambiguous; you could a priori 
+Some boolean expressions may seem ambiguous; you could, a priori, 
 interpret the expression `not x and y or z` in multiple ways,
 for example as `(not x) and (y or z)` or as `not (x and (y or z))`.
 To resolve this ambiguity, Python defines a precedence list between
@@ -182,7 +178,7 @@ expressions; from highest to lowest precedence, we have:
  5. `or`
 
  The expression `not x and y or z` is therefore interpreted as
- `((not x) and y) or z.`
+ `((not x) and y) or z`.
 
 ### Explicit Conversions
 
@@ -193,7 +189,7 @@ We say that a value `x` is:
  - **false-ish** if `bool(x)` is `False`,
  - **true-ish** if `bool(x)` is `True`.
 
-####
+#### Conversion Table
 
 The conversion table above applies to the most common types:
 
@@ -212,7 +208,7 @@ The conversion table above applies to the most common types:
 | `dict`      | `x == {}`          | `x != {}`         |
 
 
-<Admonition type="note" title='Numbers & Collections' open={true}>
+<Admonition type="note" title="Numbers and Collections" open={true}>
 For all the standard types listed above:
 
  - `None` (the sole instance of the associated type!) is false-ish:
@@ -237,7 +233,7 @@ For all the standard types listed above:
    ```
 </Admonition>
 
-<Admonition type="note" title='Default Value' open={true}>
+<Admonition type="note" title="Default Value" open={true}>
 
 For all the types listed above, you will notice that there is a unique 
 value that is false-ish; all other values are true-ish.
@@ -262,6 +258,7 @@ without arguments:
 ...     val = T()
 ...     print(repr(val))
 ... 
+None
 False
 0
 0.0
@@ -270,15 +267,15 @@ False
 b''
 ()
 []
-{}
 set()
+{}
 >>> print(all(bool(T()) is False for T in types))
 True
 ```
 </Admonition>
 
 
-## `If`
+## The `if-then-else` Statement
 
 The keyword `if` and the associated keywords `elif` and `else` allow
 **branching** the execution flow, that is, to execute a block of code
@@ -318,7 +315,7 @@ determine what the execution flow will be.
 
 # Loops
 
-## `While`
+## The `while` Statement
 
 The `while` loop executes as long as its condition is false-ish:
 
@@ -333,7 +330,7 @@ The `while` loop executes as long as its condition is false-ish:
 3
 ```
 
-## `For`
+## The `for` Statement
 
 The `for` loop allows you to iterate over all elements of a collection:
 
@@ -347,7 +344,7 @@ The `for` loop allows you to iterate over all elements of a collection:
 3
 ```
 
-Refer to the section [Iteration and Comprehension](../lec08-iteration-and-comprehension) for more details.
+Refer to the section on [Iteration and Comprehension](./lec08-iteration-and-comprehension.html) for more details.
 
 ## Exiting Loops
 
@@ -401,7 +398,7 @@ occurred.
 ok
 ```
 
-## Function calls
+## Function Calls
 
 When a function is called, its code is executed, and then execution resumes
 the normal execution flow.
@@ -470,7 +467,7 @@ In interactive mode, the exception manifests as follows:
 
  - an **explanatory** message:
    
-   - `"division by zero"`, 
+   - `"float division by zero"`, 
    
    - `"math domain error"`, 
 
@@ -507,7 +504,7 @@ Traceback (most recent call last):
 ZeroDivisionError: division by zero
 ```
 
-<Admonition type="note" title="Terminal & Errors" open={true}>
+<Admonition type="note" title="Terminal and Errors" open={true}>
 
 The string `"Hello"` is printed to standard output, but
 the error message is actually directed to standard error (file descriptor 2),
@@ -744,20 +741,20 @@ ValueError: -1 < 0.
 >>> factorial("100")
 Traceback (most recent call last):
   File "<stdin>", line 3, in <module>
-  TypeError: '<' not supported between instances of 'str' and 'int'
+TypeError: '<' not supported between instances of 'str' and 'int'
 
 During handling of the above exception, another exception occurred:
 
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
   File "<stdin>", line 11, in factorial
-  TypeError: '100' is not an integer.
+TypeError: '100' is not an integer.
 ```
 
 [Grace Hopper]: https://en.wikipedia.org/wiki/Grace_Hopper
 </Admonition>
 
-### Exceptions & Flow Control
+### Exceptions and Flow Control
 
 It may not be obvious that exceptions -- ostensibly intended to
 describe errors -- provide a powerful flow control mechanism.
