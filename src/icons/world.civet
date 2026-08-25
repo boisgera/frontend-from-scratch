@@ -1,0 +1,11 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+// Tabler icon "world" (outline), inlined since this project has no
+// icon package (the boisgera/python original vendors it as a local icon).
+import { Icon } from ./icon.js
+
+paths := ["M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0", "M3.6 9h16.8", "M3.6 15h16.8", "M11.5 3a17 17 0 0 0 0 18", "M12.5 3a17 17 0 0 1 0 18"]
+
+export function WorldIcon(props)
+  <Icon paths=paths {...props}>
