@@ -46,8 +46,8 @@ styles =
     ".toc":
       position: "sticky"
       top: "2rem"
-      flex: "0 0 220px"
-      width: "220px"
+      flex: "0 0 260px"
+      width: "260px"
       maxHeight: "calc(100vh - 4rem)"
       overflowY: "auto"
 

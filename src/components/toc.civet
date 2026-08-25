@@ -3,6 +3,7 @@
 
 import { Children, isValidElement } from react
 import { fontSize } from ../styles.js
+import { ListIcon } from ../icons/list.js
 
 // Tunable: which heading levels appear in the TOC. Body h1s (many
 // lectures use them as their top-level sections, e.g. lec01's
@@ -48,6 +49,16 @@ export function Toc({ entries })
       fontSize: fontSize.S
       lineHeight: 1.4
   >
+    <div
+      css =
+        display: "flex"
+        alignItems: "center"
+        gap: "0.4rem"
+        fontWeight: 700
+        marginBottom: "0.75rem"
+    >
+      <ListIcon />
+      "Contents"
     <ol css = { listStyle: "none", margin: 0, padding: 0 }>
       for { id, text, depth } of entries
         <li
@@ -59,6 +70,10 @@ export function Toc({ entries })
           <a
             href={`#${id}`}
             css =
+              display: "block"
+              overflow: "hidden"
+              textOverflow: "ellipsis"
+              whiteSpace: "nowrap"
               color: "#475569"
               textDecoration: "none"
               "&:hover":
