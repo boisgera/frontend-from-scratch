@@ -2,40 +2,91 @@
 "civet autoLet react jsxCode"
 
 // Adapted from boisgera/python's src/components/Header.astro
-// (drops the gravatar avatar image -- no external avatar fetching here).
+// (uses the author's GitHub avatar instead of Gravatar).
+import { GithubIcon } from ../icons/github.js
+import { fontSize } from ../styles.js
+
 export function LectureHeader({ frontmatter })
-  { title, description, date, author, authorTitle, authorAffiliation } := frontmatter ?? {}
+  { title, subtitle, author } := frontmatter ?? {}
+  { name: authorName, title: authorTitle, affiliation: authorAffiliation, github, website } := author ?? {}
+  githubHandle := github?.replace(/^@/, "")
+  avatarUrl := if githubHandle then `https://github.com/${githubHandle}.png?size=128` else undefined
   <header
     css =
       marginBottom: "3rem"
   >
-    <h1
-      css =
-        fontSize: "2.25rem"
-        lineHeight: 1
-        fontWeight: 700
-        color: "#020617"
-        marginBottom: "1rem"
-    >
-      title
-    if description
-      <p css = { color: "#64748b" }>
-        description
-    <p
-      css =
-        margin: 0
-        fontSize: "0.875rem"
-        lineHeight: "1.25rem"
-        color: "#1e293b"
-    >
-      author
-      if authorTitle or authorAffiliation
-        [
-          <br key="author-br">
-          [authorTitle, authorAffiliation].filter(Boolean).join(", ")
-        ]
-      if date
-        [
-          <br key="date-br">
-          date
-        ]
+    <div css = { marginBottom: "1.5rem" }>
+      <h1
+        css =
+          fontSize: fontSize.XXL
+          lineHeight: 1
+          fontWeight: 700
+          color: "#020617"
+          marginBottom: "1rem"
+      >
+        title
+      if subtitle
+        <p css = { color: "#64748b" }>
+          subtitle
+    if authorName
+      <div css = { display: "flex", justifyContent: "left", gap: "1rem" }>
+        if avatarUrl
+          <img
+            src={avatarUrl}
+            alt="avatar"
+            css =
+              margin: 0
+              flex: "0 72px"
+              width: "72px"
+              height: "72px"
+              borderRadius: "50%"
+          >
+        <p
+          css =
+            margin: 0
+            flex: "auto"
+            fontSize: fontSize.S
+            lineHeight: "1.25rem"
+            color: "#1e293b"
+        >
+          authorName
+          if authorTitle or authorAffiliation
+            [
+              <br key="author-br">
+              [authorTitle, authorAffiliation].filter(Boolean).join(", ")
+            ]
+          if githubHandle or website
+            [
+              <br key="links-br">
+              <span
+                key="links"
+                css =
+                  display: "inline-flex"
+                  alignItems: "center"
+                  gap: "0.35rem"
+              >
+                if githubHandle
+                  <a
+                    href={`https://github.com/${githubHandle}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    css =
+                      display: "inline-flex"
+                      alignItems: "center"
+                      gap: "0.3rem"
+                      color: "inherit"
+                      textDecoration: "none"
+                  >
+                    <GithubIcon />
+                    `@${githubHandle}`
+                if githubHandle and website
+                  <span css = { color: "#64748b" }>{"·"}</span>
+                if website
+                  <a
+                    href={website}
+                    target="_blank"
+                    rel="noreferrer"
+                    css = { color: "inherit", textDecoration: "none" }
+                  >
+                    website
+            ]

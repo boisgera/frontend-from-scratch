@@ -3,7 +3,7 @@
 
 import { Global } from @emotion/react
 
-fontSize =
+export fontSize =
   XXS: "0.625rem"
   XS: "0.75rem"
   S: "0.875rem"
