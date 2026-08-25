@@ -27,29 +27,49 @@ styles =
     lineHeight: "36px"
     padding: "18px"
 
+    // Three symmetric columns (1fr / main / 1fr) so main never shifts
+    // when .toc is empty/hidden -- but capped at its own natural content
+    // width and centered as a block (marginInline: auto), so once a
+    // viewport is wide enough for that content to fit, .toc sits flush
+    // against main (like any normal docs sidebar) instead of hugging the
+    // left edge of a much-wider-than-260px 1fr column, which is what was
+    // producing a big empty gap on the right that read as "off-center".
     ".lecture-layout":
-      display: "flex"
-      justifyContent: "center"
-      alignItems: "flex-start"
-      gap: "3rem"
+      display: "grid"
+      gridTemplateColumns: "1fr min(768px, 100%) 1fr"
+      columnGap: "3rem"
+      alignItems: "start"
+      maxWidth: "calc(768px + 2 * 3rem + 260px)"
+      marginInline: "auto"
 
     // Documents need to be wrapped in a main element for this to work.
-    // Centering is .lecture-layout's job (justifyContent above): with a
-    // sidebar as a flex sibling, auto-margins on main alone would no
-    // longer center it symmetrically.
     main:
-      maxWidth: "768px"
+      gridColumn: "2"
       width: "100%"
-      flex: "1 1 auto"
       paddingInline: "1rem"
 
+    // overflowY lives on .toc-list, not here: the scrollbar it produces
+    // must not run alongside the "Contents" header/chevron row above it.
+    // justifySelf keeps it hugging main's edge rather than centered (or
+    // stranded far right) in its own, potentially much wider, 1fr column.
     ".toc":
+      gridColumn: "3"
+      justifySelf: "start"
       position: "sticky"
       top: "2rem"
-      flex: "0 0 260px"
       width: "260px"
       maxHeight: "calc(100vh - 4rem)"
+      display: "flex"
+      flexDirection: "column"
+
+    // Scrolls independently of the "Contents" header/chevron above it
+    // (minHeight: 0 is what lets a flex child actually shrink and scroll
+    // instead of pushing .toc past its maxHeight).
+    ".toc-list":
+      flex: "1 1 auto"
+      minHeight: 0
       overflowY: "auto"
+      paddingRight: "0.5rem"
 
     "img, picture, video, canvas":
       display: "block"
