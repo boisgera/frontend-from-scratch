@@ -1,0 +1,50 @@
+---
+render: static
+title: "Data Science"
+---
+import { Styles } from '../styles.js'
+
+<Styles />
+
+# Data Science
+
+*Sébastien Boisgérault — Mines Paris, PSL University*
+
+[← Back to Eul.Ink](index.html)
+
+## Piou-piou, a nano PPL 🐤
+
+[Pioupiou](https://boisgera.github.io/pioupiou/) is a nano probabilistic programming language for Python.
+
+```python
+>>> import pioupiou as pp
+>>> X, E = pp.Uniform(0.0, 1.0), pp.Normal(0.0, 0.01)
+>>> Y = 0.5 * X + 1.0 + E
+>>> omega = pp.Omega(1000) # 1000 samples
+>>> x, y = X(omega), Y(omega)
+>>> x
+array([6.36961687e-01, ..., 3.80007897e-01])
+>>> y
+array([1.09588258, ..., 1.14366864])
+```
+
+ - [Project page](https://boisgera.github.io/pioupiou/)
+ - [GitHub repository](https://github.com/boisgera/pioupiou)
+
+## Jacques Harthong – Probabilités & Statistiques
+
+A preservation effort for an open-source probability and statistics textbook
+by Jacques Harthong: the original paperback is out of print and sources are
+scarce online.
+
+ - [Probabilités et Statistiques (PDF)](https://eul.ink/data-science/documents/Harthong%20-%20Probabilités%20et%20Statistiques.pdf)
+ - [GitHub repository](https://github.com/boisgera/harthong-prob)
+ - [Intuitionnisme 84](https://mathinfo.unistra.fr/fileadmin/upload/IREM/Publications/L_Ouvert/n077Reeb/o_77reeb_42-77.pdf)
+
+## How to Become A Bayesian
+
+An annotated reading list for beginners interested in understanding
+Bayesian data analysis methods.
+
+ - [How to become a Bayesian in eight easy steps (PDF)](https://eul.ink/data-science/documents/Etz%20et%20al,%208%20steps%20v2.pdf)
+ - [OSF repository (DOI)](https://dx.doi.org/10.17605/OSF.IO/PH6SW)
