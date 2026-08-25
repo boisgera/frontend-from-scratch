@@ -119,40 +119,41 @@ export function Toc({ entries })
   if entries.length is 0
     return null
   tree := buildTree entries
-  <nav
-    aria-label="Table of contents"
-    className="toc"
-    css =
-      fontSize: fontSize.S
-      lineHeight: 1.4
-  >
-    <details
-      open
-      css={{
-        display: "flex"
-        flexDirection: "column"
-        flex: "1 1 auto"
-        minHeight: 0
-        ...chevronToggleCss
-      }}
+  <div className="toc-rail">
+    <nav
+      aria-label="Table of contents"
+      className="toc"
+      css =
+        fontSize: fontSize.S
+        lineHeight: 1.4
     >
-      <summary
-        css =
+      <details
+        open
+        css={{
           display: "flex"
-          alignItems: "center"
-          justifyContent: "space-between"
-          gap: "0.4rem"
-          fontWeight: 700
-          marginBottom: "0.75rem"
-          cursor: "pointer"
-          listStyle: "none"
-          flexShrink: 0
-          "&::-webkit-details-marker":
-            display: "none"
+          flexDirection: "column"
+          flex: "1 1 auto"
+          minHeight: 0
+          ...chevronToggleCss
+        }}
       >
-        <span css = { display: "flex", alignItems: "center", gap: "0.4rem" }>
-          <ListIcon />
-          "Contents"
-        <ChevronDownIcon className="toc-chevron" css = { transition: "transform 0.15s ease" } />
-      <ol className="toc-list" css = { listStyle: "none", margin: 0, padding: 0 }>
-        renderNodes tree
+        <summary
+          css =
+            display: "flex"
+            alignItems: "center"
+            justifyContent: "space-between"
+            gap: "0.4rem"
+            fontWeight: 700
+            marginBottom: "0.75rem"
+            cursor: "pointer"
+            listStyle: "none"
+            flexShrink: 0
+            "&::-webkit-details-marker":
+              display: "none"
+        >
+          <span css = { display: "flex", alignItems: "center", gap: "0.4rem" }>
+            <ListIcon />
+            "Contents"
+          <ChevronDownIcon className="toc-chevron" css = { transition: "transform 0.15s ease" } />
+        <ol className="toc-list" css = { listStyle: "none", margin: 0, padding: 0 }>
+          renderNodes tree

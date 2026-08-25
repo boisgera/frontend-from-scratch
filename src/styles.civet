@@ -12,6 +12,22 @@ export fontSize =
   XL: "1.5rem"
   XXL: "2.25rem"
 
+// Shared layout constants (px). mainMaxWidth/mainMinWidth/tocWidth/gap
+// are the numbers from the ask; bodyPadding is body's own inline
+// padding, reused below so the TOC breakpoint stays derived rather than
+// re-guessed by hand.
+mainMaxWidth := 768
+mainMinWidth := 384
+tocWidth := 108
+tocGap := 36
+bodyPadding := 18
+
+// Viewport width at which the right margin next to a max-width main
+// (bodyContentWidth - mainMaxWidth) / 2, where bodyContentWidth is the
+// viewport minus body's own left+right padding) first becomes wide
+// enough to fit "gap + toc". Below this, .toc-rail is hidden.
+tocBreakpoint := mainMaxWidth + 2 * (tocGap + tocWidth) + 2 * bodyPadding
+
 // Typographic/layout choices ported from boisgera/python's MDXLayout.astro
 styles =
   html:
@@ -25,45 +41,58 @@ styles =
     fontOpticalSizing: "auto"
     fontSize: fontSize.M
     lineHeight: "36px"
-    padding: "18px"
+    padding: `${bodyPadding}px`
 
-    // Three symmetric columns (1fr / main / 1fr) keep main centered
-    // within whatever width .lecture-layout ends up with -- and that
-    // width is itself capped at 768 (main) + 2*3rem (gaps) + 260 (toc)
-    // = 1136px and centered as a block (marginInline: auto), so: above
-    // that content width, main keeps its full 768px and left/right
-    // margins grow together, staying equal; below it, the grid shrinks
-    // main via min(768px, 100%) while the two 1fr tracks keep splitting
-    // the leftover space evenly, so margins stay equal at every step in
-    // between too. The @media breakpoint below hides .toc at exactly
-    // the viewport width where this cap stops applying (1136px content
-    // + body's own 2*18px padding = 1172px) -- any lower and .toc's
-    // fixed 260px would no longer fit its shrinking track and would
-    // overflow into main instead of just disappearing.
+    // position: relative makes this the containing block for .toc-rail
+    // (position: absolute), so the TOC's placement is computed purely
+    // from main's own box below -- it has no effect on main itself,
+    // which stays centered via its own margin-inline: auto regardless
+    // of whether the TOC is present, hidden, or how wide it is.
     ".lecture-layout":
-      display: "grid"
-      gridTemplateColumns: "1fr min(768px, 100%) 1fr"
-      columnGap: "3rem"
-      alignItems: "start"
-      maxWidth: "1136px"
-      marginInline: "auto"
+      position: "relative"
 
     // Documents need to be wrapped in a main element for this to work.
+    // max/min-width + margin-inline: auto center main in the page on
+    // their own, independent of any sibling -- this is what keeps main
+    // dead-centered whether or not .toc-rail ends up shown.
     main:
-      gridColumn: "2"
+      boxSizing: "border-box"
+      maxWidth: `${mainMaxWidth}px`
+      minWidth: `${mainMinWidth}px`
       width: "100%"
+      marginInline: "auto"
       paddingInline: "1rem"
+
+    // Absolutely positioned relative to .lecture-layout, so it never
+    // participates in the layout that centers main. Anchored off
+    // main's *max* width (main is only ever this wide when there's
+    // room for the TOC to begin with -- below tocBreakpoint the whole
+    // rail is hidden). top/bottom: 0 stretches it to .lecture-layout's
+    // full (content-derived) height, giving the sticky nav inside room
+    // to stick throughout the scroll.
+    ".toc-rail":
+      display: "none"
+      position: "absolute"
+      top: 0
+      bottom: 0
+      left: `calc(50% + ${mainMaxWidth / 2 + tocGap}px)`
+      width: `${tocWidth}px`
+
+    // Nested under body (not a top-level sibling) so this compiles to
+    // "body .toc-rail" too -- same specificity as the default above, so
+    // source order decides and this wins. A top-level ".toc-rail" rule
+    // here would be *less* specific than "body .toc-rail" and would
+    // always lose, no matter the media condition.
+    `@media (min-width: ${tocBreakpoint}px)`:
+      ".toc-rail":
+        display: "block"
 
     // overflowY lives on .toc-list, not here: the scrollbar it produces
     // must not run alongside the "Contents" header/chevron row above it.
-    // justifySelf keeps it hugging main's edge rather than centered (or
-    // stranded far right) in its own, potentially much wider, 1fr column.
     ".toc":
-      gridColumn: "3"
-      justifySelf: "start"
       position: "sticky"
       top: "2rem"
-      width: "260px"
+      width: "100%"
       maxHeight: "calc(100vh - 4rem)"
       display: "flex"
       flexDirection: "column"
@@ -145,12 +174,6 @@ styles =
       padding: "1rem 2rem"
     "pre > code":
       lineHeight: "1rem"
-
-  // 1136px .lecture-layout cap + body's 2*18px padding: the viewport
-  // width right below which the cap above stops fully applying.
-  "@media (max-width: 1172px)":
-    ".toc":
-      display: "none"
 
 export function Styles()
   <Global {styles}>
