@@ -27,15 +27,26 @@ styles =
     lineHeight: "36px"
     padding: "18px"
 
-    // Three symmetric columns (1fr / main / 1fr): main's own column is
-    // always the same width regardless of what's in the third one, so
-    // main stays exactly page-centered whether .toc is present, empty,
-    // or hidden -- it must never shift to accommodate the sidebar.
+    // Three symmetric columns (1fr / main / 1fr) keep main centered
+    // within whatever width .lecture-layout ends up with -- and that
+    // width is itself capped at 768 (main) + 2*3rem (gaps) + 260 (toc)
+    // = 1136px and centered as a block (marginInline: auto), so: above
+    // that content width, main keeps its full 768px and left/right
+    // margins grow together, staying equal; below it, the grid shrinks
+    // main via min(768px, 100%) while the two 1fr tracks keep splitting
+    // the leftover space evenly, so margins stay equal at every step in
+    // between too. The @media breakpoint below hides .toc at exactly
+    // the viewport width where this cap stops applying (1136px content
+    // + body's own 2*18px padding = 1172px) -- any lower and .toc's
+    // fixed 260px would no longer fit its shrinking track and would
+    // overflow into main instead of just disappearing.
     ".lecture-layout":
       display: "grid"
       gridTemplateColumns: "1fr min(768px, 100%) 1fr"
       columnGap: "3rem"
       alignItems: "start"
+      maxWidth: "1136px"
+      marginInline: "auto"
 
     // Documents need to be wrapped in a main element for this to work.
     main:
@@ -135,7 +146,9 @@ styles =
     "pre > code":
       lineHeight: "1rem"
 
-  "@media (max-width: 1100px)":
+  // 1136px .lecture-layout cap + body's 2*18px padding: the viewport
+  // width right below which the cap above stops fully applying.
+  "@media (max-width: 1172px)":
     ".toc":
       display: "none"
 
