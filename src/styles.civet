@@ -18,7 +18,7 @@ export fontSize =
 // re-guessed by hand.
 mainMaxWidth := 768
 mainMinWidth := 384
-tocWidth := 108
+tocWidth := 270
 tocGap := 36
 bodyPadding := 18
 
