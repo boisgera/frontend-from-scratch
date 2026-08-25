@@ -133,6 +133,13 @@ styles =
     figure:
       margin: 0
       marginBottom: space.L
+    figcaption:
+      color: "#64748b"
+      fontSize: fontSize.S
+      textAlign: "center"
+      maxWidth: "80%"
+      marginInline: "auto"
+      marginTop: space.S
 
     p:
       marginTop: 0
