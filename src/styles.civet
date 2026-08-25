@@ -72,6 +72,14 @@ styles =
       marginInline: "auto"
       paddingInline: space.M
 
+      // Default sizing for content images; an image with its own inline
+      // style (e.g. a fixed height + objectFit) overrides this as-is,
+      // since inline styles always beat an external stylesheet rule.
+      img:
+        width: "100%"
+        height: "auto"
+        borderRadius: "8px"
+
     // Absolutely positioned relative to .lecture-layout, so it never
     // participates in the layout that centers main. Anchored off
     // main's *max* width (main is only ever this wide when there's
