@@ -11,14 +11,10 @@ author:
   github: "@boisgera"
   website: "https://eul.ink"
 ---
-import { Styles } from '../styles.js'
 import { Admonition } from '../components/admonition.js'
-import { LectureHeader } from '../components/lecture-header.js'
+import { Lecture } from '../components/lecture.js'
 
-<Styles />
-<LectureHeader frontmatter={frontmatter} />
-
-<main>
+<Lecture frontmatter={frontmatter}>
 
 # Equality
 
@@ -353,4 +349,4 @@ False
 
 </Admonition>
 
-</main>
+</Lecture>

@@ -27,11 +27,29 @@ styles =
     lineHeight: "36px"
     padding: "18px"
 
+    ".lecture-layout":
+      display: "flex"
+      justifyContent: "center"
+      alignItems: "flex-start"
+      gap: "3rem"
+
     // Documents need to be wrapped in a main element for this to work.
+    // Centering is .lecture-layout's job (justifyContent above): with a
+    // sidebar as a flex sibling, auto-margins on main alone would no
+    // longer center it symmetrically.
     main:
       maxWidth: "768px"
-      marginInline: "auto"
+      width: "100%"
+      flex: "1 1 auto"
       paddingInline: "1rem"
+
+    ".toc":
+      position: "sticky"
+      top: "2rem"
+      flex: "0 0 220px"
+      width: "220px"
+      maxHeight: "calc(100vh - 4rem)"
+      overflowY: "auto"
 
     "img, picture, video, canvas":
       display: "block"
@@ -101,6 +119,10 @@ styles =
       padding: "1rem 2rem"
     "pre > code":
       lineHeight: "1rem"
+
+  "@media (max-width: 1100px)":
+    ".toc":
+      display: "none"
 
 export function Styles()
   <Global {styles}>
