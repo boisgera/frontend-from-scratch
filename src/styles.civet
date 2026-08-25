@@ -28,25 +28,24 @@ styles =
     padding: "18px"
 
     ".lecture-layout":
+      position: "relative"
       display: "flex"
       justifyContent: "center"
       alignItems: "flex-start"
-      gap: "3rem"
 
-    // Documents need to be wrapped in a main element for this to work.
-    // Centering is .lecture-layout's job (justifyContent above): with a
-    // sidebar as a flex sibling, auto-margins on main alone would no
-    // longer center it symmetrically.
+    // main is the sole flex child (.toc is positioned absolutely, out of
+    // flow), so it centers on the full page width regardless of the toc.
     main:
       maxWidth: "768px"
       width: "100%"
-      flex: "1 1 auto"
       paddingInline: "1rem"
 
+    // Positioned relative to .lecture-layout, offset from main's centered
+    // box, so it doesn't affect main's centering.
     ".toc":
-      position: "sticky"
+      position: "absolute"
       top: "2rem"
-      flex: "0 0 220px"
+      left: "calc(50% + 384px + 3rem)"
       width: "220px"
       maxHeight: "calc(100vh - 4rem)"
       overflowY: "auto"
