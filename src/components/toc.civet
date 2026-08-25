@@ -4,6 +4,7 @@
 import { Children, isValidElement } from react
 import { fontSize } from ../styles.js
 import { ListIcon } from ../icons/list.js
+import { ChevronDownIcon } from ../icons/chevron-down.js
 
 // Tunable: which heading levels appear in the TOC. Body h1s (many
 // lectures use them as their top-level sections, e.g. lec01's
@@ -49,34 +50,49 @@ export function Toc({ entries })
       fontSize: fontSize.S
       lineHeight: 1.4
   >
-    <div
+    <details
+      open
       css =
-        display: "flex"
-        alignItems: "center"
-        gap: "0.4rem"
-        fontWeight: 700
-        marginBottom: "0.75rem"
+        "&[open] .toc-chevron":
+          transform: "rotate(0deg)"
+        "&:not([open]) .toc-chevron":
+          transform: "rotate(-90deg)"
     >
-      <ListIcon />
-      "Contents"
-    <ol css = { listStyle: "none", margin: 0, padding: 0 }>
-      for { id, text, depth } of entries
-        <li
-          key={id}
-          css =
-            marginBottom: "0.6rem"
-            marginLeft: `${(depth - MIN_DEPTH) * 0.9}rem`
-        >
-          <a
-            href={`#${id}`}
+      <summary
+        css =
+          display: "flex"
+          alignItems: "center"
+          justifyContent: "space-between"
+          gap: "0.4rem"
+          fontWeight: 700
+          marginBottom: "0.75rem"
+          cursor: "pointer"
+          listStyle: "none"
+          "&::-webkit-details-marker":
+            display: "none"
+      >
+        <span css = { display: "flex", alignItems: "center", gap: "0.4rem" }>
+          <ListIcon />
+          "Contents"
+        <ChevronDownIcon className="toc-chevron" css = { transition: "transform 0.15s ease" } />
+      <ol css = { listStyle: "none", margin: 0, padding: 0 }>
+        for { id, text, depth } of entries
+          <li
+            key={id}
             css =
-              display: "block"
-              overflow: "hidden"
-              textOverflow: "ellipsis"
-              whiteSpace: "nowrap"
-              color: "#475569"
-              textDecoration: "none"
-              "&:hover":
-                color: "#2563eb"
+              marginBottom: "0.6rem"
+              marginLeft: `${(depth - MIN_DEPTH) * 0.9}rem`
           >
-            text
+            <a
+              href={`#${id}`}
+              css =
+                display: "block"
+                overflow: "hidden"
+                textOverflow: "ellipsis"
+                whiteSpace: "nowrap"
+                color: "#475569"
+                textDecoration: "none"
+                "&:hover":
+                  color: "#2563eb"
+            >
+              text
