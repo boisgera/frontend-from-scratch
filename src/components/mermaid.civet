@@ -26,4 +26,8 @@ export function Mermaid({ chart, theme, bg, fg, accent, muted, transparent = tru
   if error
     <pre>{error.message}</pre>
   else
-    <div className="mermaid-diagram" dangerouslySetInnerHTML={{ __html: svg }}>
+    <div
+      className="mermaid-diagram"
+      css = { display: "flex", justifyContent: "center" }
+      dangerouslySetInnerHTML={{ __html: svg }}
+    >
