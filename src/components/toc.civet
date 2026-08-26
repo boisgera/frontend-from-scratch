@@ -157,7 +157,7 @@ export function Toc({ entries })
               fontVariant: "small-caps"
               letterSpacing: "0.02em"
           >
-            "On this page"
+            "on this page"
           <ChevronDownIcon className="toc-chevron" css = { transition: "transform 0.15s ease" } />
         <ol className="toc-list" css = { listStyle: "none", margin: 0, padding: 0 }>
           renderNodes tree

@@ -1,5 +1,4 @@
 
-
  1. Create a "Hello frontend!" `index.html` file with no JS
     and a (de-facto) standard `head` (thanks LLMs!)
 
@@ -148,38 +147,42 @@
 
 18. At the end of the day, I go for a single hierarchy with .civet code and
     .mdx pages. So I can either "co-localize" content and code or not, 
-    there is no rigid convention.
+    there is no rigid convention
 
-
-
-TODO:
-
-  - Long/hard : work our a components and pages split, with mdx in pages
+19. Long/hard : work our a components and pages split, with mdx in pages
     that use hard links and therefore automatically follow a MPA / 
     "file-based routing" scheme. But I need to statically generate them
     + insert (optional, for non-static stuff) hydration code, emotion cache 
     then needs to be handled, etc.
 
+    Done: static, hydration and client-side rendering (all MPA)
+
+20. React Three fiber components.
+
+21. Beautiful Mermaid.
+
+22. TOC stuff
+
+23. Beginning of a design system (some design tokens) in styles.civet.
+
+
+
+
   - Smart (auto-locating) TOC for MDX, see e.g. https://blog.n.ichol.ai/packaging-latent-reasoning-as-a-real-model#two-knobs-worth-understanding
 
     Try it with stuff that is fully static first?
-
-  - TODO:
-      - rehydration when needed
-      - layouts (?) (wrapper of mdx content). ATML, let the use do 
-      - explore the frontmatter stuff, that could be handy.   
-
+ 
   - Shiki coloring from MDX
 
-  - Embed Strudel?
+  - Code editors, not merely displays.
 
-  - React Three fiber 
+  - Embed Strudel?
 
   - Framer/Motion stuff (try background with SVG anim and mouse tracking)
 
   - React Flow stuff
 
-  - Tldraw React component (ou excalidraw)
+  - Tldraw React component (not open-source :() or excalidraw
 
   - Marimo React component
 

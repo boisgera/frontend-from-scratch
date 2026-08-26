@@ -3,16 +3,11 @@
 
 // Adapted from boisgera/python's src/components/Header.astro
 // (uses the author's GitHub avatar instead of Gravatar).
-import { GithubIcon } from ../icons/github.js
-import { WorldIcon } from ../icons/world.js
-import { MailIcon } from ../icons/mail.js
+import { PersonCard } from ./person-card.js
 import { fontSize, space } from ../styles.js
 
 export function Header({ frontmatter })
   { title, subtitle, author } := frontmatter ?? {}
-  { name: authorName, affiliation: authorAffiliation, email, github, website } := author ?? {}
-  githubHandle := github?.replace(/^@/, "")
-  avatarUrl := if githubHandle then `https://github.com/${githubHandle}.png?size=128` else undefined
   <header
     css =
       marginBottom: space.XXL
@@ -30,68 +25,5 @@ export function Header({ frontmatter })
       if subtitle
         <p css = { color: "#64748b" }>
           subtitle
-    if authorName
-      <div css = { display: "flex", justifyContent: "left", gap: space.M }>
-        if avatarUrl
-          <img
-            src={avatarUrl}
-            alt="avatar"
-            css =
-              margin: 0
-              flex: "0 72px"
-              width: "72px"
-              height: "72px"
-              borderRadius: "50%"
-          >
-        <p
-          css =
-            margin: 0
-            flex: "auto"
-            fontSize: fontSize.S
-            lineHeight: "1.25rem"
-            color: "#1e293b"
-        >
-          authorName
-          if authorAffiliation
-            [
-              <br key="affiliation-br">
-              authorAffiliation
-            ]
-          if githubHandle or website or email
-            [
-              <br key="links-br">
-              <span
-                key="links"
-                css =
-                  display: "inline-flex"
-                  alignItems: "center"
-                  gap: space.XS
-                  marginTop: space.XXS
-              >
-                if githubHandle
-                  <a
-                    href={`https://github.com/${githubHandle}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`GitHub: @${githubHandle}`}
-                    css = { display: "inline-flex", color: "inherit" }
-                  >
-                    <GithubIcon />
-                if website
-                  <a
-                    href={website}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="Website"
-                    css = { display: "inline-flex", color: "inherit" }
-                  >
-                    <WorldIcon />
-                if email
-                  <a
-                    href={`mailto:${email}`}
-                    aria-label={`Email: ${email}`}
-                    css = { display: "inline-flex", color: "inherit" }
-                  >
-                    <MailIcon />
-              </span>
-            ]
+    if author?.name
+      <PersonCard {...author} />

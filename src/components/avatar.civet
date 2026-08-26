@@ -1,0 +1,15 @@
+// @ts-nocheck
+"civet autoLet react jsxCode"
+
+export function Avatar({ src, alt = "avatar", size = "72px" })
+  <img
+    src={src}
+    alt={alt}
+    fetchPriority="high"
+    css =
+      margin: 0
+      flex: `0 ${size}`
+      width: size
+      height: size
+      borderRadius: "50%"
+  >
