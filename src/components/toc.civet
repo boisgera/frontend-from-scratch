@@ -3,7 +3,6 @@
 
 import { Children, isValidElement } from react
 import { fontSize, space } from ../styles.js
-import { ListIcon } from ../icons/list.js
 import { ChevronDownIcon } from ../icons/chevron-down.js
 
 // Tunable: which heading levels appear in the TOC. Body h1s (many
@@ -153,9 +152,12 @@ export function Toc({ entries })
             "&::-webkit-details-marker":
               display: "none"
         >
-          <span css = { display: "flex", alignItems: "center", gap: space.XS }>
-            <ListIcon />
-            "Contents"
+          <span
+            css =
+              fontVariant: "small-caps"
+              letterSpacing: "0.02em"
+          >
+            "On this page"
           <ChevronDownIcon className="toc-chevron" css = { transition: "transform 0.15s ease" } />
         <ol className="toc-list" css = { listStyle: "none", margin: 0, padding: 0 }>
           renderNodes tree
