@@ -166,15 +166,43 @@
 23. Beginning of a design system (some design tokens) in styles.civet.
 
 
+Search and links:
 
+  - Pagefind Stuff?
+
+  - Social card / page preview, "smart tooltip" with preview for internal
+    links? How does Verso deal with internal references/links?
+
+    How do wikis do?
 
   - Smart (auto-locating) TOC for MDX, see e.g. https://blog.n.ichol.ai/packaging-latent-reasoning-as-a-real-model#two-knobs-worth-understanding
 
-    Try it with stuff that is fully static first?
- 
-  - Shiki coloring from MDX
+Design:
+
+  - Steal ideas from good examples!
+
+  - Improve the design tokens / systems archi
+
+  - Improves the "small things" (uniform margins, spacing in lists, etc)
 
   - Code editors, not merely displays.
+
+  - Make a front-page with cards for sub-pages? Anyway I somehow need some
+    card stuff with images and short descriptions...
+
+Code:
+
+  - Improved code blocks (copy, etc.)
+
+  - "Link git repo"?
+
+  - Shiki coloring from MDX
+
+  - Try Microlighter: https://daverupert.com/2026/08/microlighter/
+
+  - Lean code with tooltips?
+
+React components:
 
   - Embed Strudel?
 
@@ -186,6 +214,4 @@
 
   - Marimo React component
 
-  - Pagefind Stuff?
-  
-  - Try Microlighter: https://daverupert.com/2026/08/microlighter/
+
